@@ -7,6 +7,7 @@
     "dev": "lite-server",
     "clean": "rm -rf dist/",
     "build:css": "cssmin < app/sass/main.css > dist/main.css",
+    "scss": "node-sass --output-style compressed -o dist/css app/sass/scss",
     "watch": "watchify app/app.ts -p [ tsify -m --noImplicitAny ] -t sassify -o dist/bundle.js",
     "start": "concurrently \"npm run watch\" \"npm run dev\""
   },
@@ -16,13 +17,13 @@
   "author": "Mark Fairhurst",
   "license": "ISC",
   "devDependencies": {
-    "autoprefixer": "^6.3.7",
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "concurrently": "^2.2.0",
     "cssmin": "^0.4.3",
     "lite-server": "^2.2.2",
+    "node-sass": "^3.8.0",
     "sassify": "^1.0.0",
     "tsify": "^0.16.0",
     "typescript": "^1.8.10",
