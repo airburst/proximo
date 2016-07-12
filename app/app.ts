@@ -31,7 +31,9 @@ let showMap = (position: any) => {
     gmap.addMarker(centre, 'Mark', 'blue');
 
     // Add mock points
-    MockPoints.forEach(m => {
-        gmap.addMarker(m.location, m.name, m.color);
-    });
+    setInterval(() => {
+        MockPoints.forEach(m => {
+            gmap.addMarker(m.location, m.name, m.color);
+        })},
+    3000);
 }
