@@ -1,4 +1,3 @@
-//import {debug} from './utils';
 import {Geo} from './geo';
 import {GoogleMap, LatLng, Url} from './googlemap';
 import {ScriptLoadService} from './scriptload';
@@ -10,13 +9,13 @@ window.onload = function () {
             scriptPromises = [Url].map(scriptLoad.load);
 
         Promise.all(scriptPromises)
-            .then(() => { startMap(); }, function(value) {
+            .then(() => { getPosition(); }, function(value) {
                 console.error('Script not found:', value)
             });
     }
 }
 
-let startMap = () => {
+let getPosition = () => {
     let geo = new Geo();
     if (geo.isSupported) {
         geo.getLocation()
