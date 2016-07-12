@@ -21,6 +21,7 @@ export class GoogleMap {
         strokeWeight: 2
     };
     markers: any[] = [];
+    bounds: any = new window.google.maps.LatLngBounds();
 
     constructor(options?: any) {
         if (options) { this.setOptions(options); }
@@ -50,21 +51,9 @@ export class GoogleMap {
     }
 
     private scaleToFitMarkers(marker: any) {
-        this.markers.push(marker.getPosition());
-        if (this.markers.length > 1) { this.setBounds(); }
+        this.markers.push(marker);
+        this.bounds.extend(marker.getPosition());
+        this.map.fitBounds(this.bounds);
     }
 
-    private setBounds() {
-        let bounds: any,
-            lastMarker = this.markers[0];
-        this.sortMarkers().forEach(m => {
-            bounds = new window.google.maps.LatLngBounds(lastMarker, m);
-            lastMarker = m;
-        });
-        this.map.fitBounds(bounds);
-    }
-
-    private sortMarkers() {
-        return this.markers.sort((a, b) => { return (a.lng() - b.lng()); });
-    }
 }
