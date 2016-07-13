@@ -50,6 +50,13 @@ export class GoogleMap {
         });
     }
 
+    public removeMarkers() {
+        this.markers.forEach(m => {
+            m.setMap(null);
+            m = null;
+        });
+    }
+
     public addMarker(marker: Marker) {
         let symbol = Object.assign({}, this.icon, { strokeColor: marker.color });
         let mapMarker = new window.google.maps.Marker({

@@ -31,10 +31,11 @@ window.onload = () => {
 let loadMap = () => {
     gmap = new GoogleMap();
     let updateMap = (snapshot: any) => {
+        gmap.removeMarkers();
         snapshot.forEach((s: any) => {
             let m = <Marker>s.val();
             gmap.addMarker(m);
-            console.log(m);
+            console.log(m)
         });
     };
     fire.db.on('value', updateMap);
@@ -52,15 +53,14 @@ let getPosition = () => {
 let showMap = (position: any) => {
     let centre = { lat: position.latitude, lng: position.longitude };
     gmap.show();
-    //gmap.addMarker(centre, 'Mark', 'blue');
 
     let id = fire.addLocation({ name: 'Mark', location: centre, color: 'blue' });
     console.log('added', id);
 
     // Add mock points
-    setInterval(() => {
+    setTimeout(() => {
         MockPoints.forEach(m => {
-            //gmap.addMarker(m.location, m.name, m.color);
+            fire.addLocation(m);
         })
     },
         3000);
