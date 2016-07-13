@@ -2,6 +2,13 @@ import {Geo} from './geo';
 import {GoogleMap, LatLng, Url} from './googlemap';
 import {ScriptLoadService} from './scriptload';
 import {MockPoints} from './mock';
+import {Fire} from './fire';
+
+let fire = new Fire();
+let updateMap = (snapshot: any) => {
+    console.log('snapshot', snapshot.val());
+};
+fire.db.on('value', updateMap);
 
 window.onload = function () {
     if (!window.google) {
@@ -9,7 +16,7 @@ window.onload = function () {
             scriptPromises = [Url].map(scriptLoad.load);
 
         Promise.all(scriptPromises)
-            .then(() => { getPosition(); }, function(value) {
+            .then(() => { getPosition(); }, function (value) {
                 console.error('Script not found:', value)
             });
     }
@@ -30,10 +37,13 @@ let showMap = (position: any) => {
     gmap.show();
     gmap.addMarker(centre, 'Mark', 'blue');
 
+    fire.setLocation({ name: 'Mark', location: centre, color: 'blue' })
+
     // Add mock points
     setInterval(() => {
         MockPoints.forEach(m => {
             gmap.addMarker(m.location, m.name, m.color);
-        })},
-    3000);
+        })
+    },
+        3000);
 }
