@@ -35,7 +35,6 @@ let loadMap = () => {
         snapshot.forEach((s: any) => {
             let m = <Marker>s.val();
             gmap.addMarker(m);
-            console.log(m)
         });
     };
     fire.db.on('value', updateMap);
@@ -55,7 +54,6 @@ let showMap = (position: any) => {
     gmap.show();
 
     let id = fire.addLocation({ name: 'Mark', location: centre, color: 'blue' });
-    console.log('added', id);
 
     // Add mock points
     setTimeout(() => {

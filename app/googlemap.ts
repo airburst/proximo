@@ -33,10 +33,11 @@ export class GoogleMap {
         strokeWeight: 2
     };
     markers: any[] = [];
-    bounds: any = new window.google.maps.LatLngBounds();
+    bounds: any;
 
     constructor(options?: any) {
         if (options) { this.setOptions(options); }
+        this.resetBounds();
     }
 
     public setOptions(options?: any) {
@@ -55,6 +56,11 @@ export class GoogleMap {
             m.setMap(null);
             m = null;
         });
+        this.resetBounds();
+    }
+
+    private resetBounds() {
+        this.bounds = new window.google.maps.LatLngBounds();
     }
 
     public addMarker(marker: Marker) {
