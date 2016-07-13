@@ -72,10 +72,10 @@ export class GoogleMap {
             title: marker.name,
             label: marker.name
         });
-        this.scaleToFitMarkers(mapMarker);
+        this.scaleToFitNewMarker(mapMarker);
     }
 
-    private scaleToFitMarkers(marker: any) {
+    private scaleToFitNewMarker(marker: any) {
         this.markers.push(marker);
         this.bounds.extend(marker.getPosition());
         this.map.fitBounds(this.bounds);
