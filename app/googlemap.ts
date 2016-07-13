@@ -7,6 +7,18 @@ export interface LatLng {
     lng: number;
 }
 
+export class Marker {
+    name: string;
+    location: LatLng;
+    color: string;
+
+    constructor(location: LatLng, name: string = '', color: string = 'red') {
+        this.location = location;
+        this.name = name;
+        this.color = color;
+    }
+}
+
 export class GoogleMap {
     map: any;
     options: any = {
@@ -38,16 +50,16 @@ export class GoogleMap {
         });
     }
 
-    public addMarker(point: LatLng, title: string = '', color: string = 'red') {
-        let symbol = Object.assign({}, this.icon, { strokeColor: color });
-        let marker = new window.google.maps.Marker({
-            position: point,
+    public addMarker(marker: Marker) {
+        let symbol = Object.assign({}, this.icon, { strokeColor: marker.color });
+        let mapMarker = new window.google.maps.Marker({
+            position: marker.location,
             map: this.map,
             icon: symbol,
-            title: title,
-            label: title
+            title: marker.name,
+            label: marker.name
         });
-        this.scaleToFitMarkers(marker);
+        this.scaleToFitMarkers(mapMarker);
     }
 
     private scaleToFitMarkers(marker: any) {

@@ -1,26 +1,44 @@
 import {Geo} from './geo';
-import {GoogleMap, LatLng, Url} from './googlemap';
+import {GoogleMap, LatLng, Marker, Url} from './googlemap';
 import {ScriptLoadService} from './scriptload';
 import {MockPoints} from './mock';
 import {Fire} from './fire';
 
 let fire = new Fire();
-let updateMap = (snapshot: any) => {
-    console.log('snapshot', snapshot.val());
-};
-fire.db.on('value', updateMap);
+let gmap: any;
 
-window.onload = function () {
+// this.db.on('child_added', function (snapshot: any) {
+//     let marker = <Marker>snapshot.val();
+//     let id = snapshot.key;
+//     console.log(id, marker.name, marker.location, marker.color);
+// });
+
+window.onload = () => {
     if (!window.google) {
         let scriptLoad = new ScriptLoadService(),
             scriptPromises = [Url].map(scriptLoad.load);
 
         Promise.all(scriptPromises)
-            .then(() => { getPosition(); }, function (value) {
+            .then(() => { 
+                loadMap();
+                getPosition(); 
+            }, function (value) {
                 console.error('Script not found:', value)
             });
     }
 }
+
+let loadMap = () => {
+    gmap = new GoogleMap();
+    let updateMap = (snapshot: any) => {
+        snapshot.forEach((s: any) => {
+            let m = <Marker>s.val();
+            gmap.addMarker(m);
+            console.log(m);
+        });
+    };
+    fire.db.on('value', updateMap);
+};
 
 let getPosition = () => {
     let geo = new Geo();
@@ -33,16 +51,16 @@ let getPosition = () => {
 
 let showMap = (position: any) => {
     let centre = { lat: position.latitude, lng: position.longitude };
-    let gmap = new GoogleMap({ centre: centre });
     gmap.show();
-    gmap.addMarker(centre, 'Mark', 'blue');
+    //gmap.addMarker(centre, 'Mark', 'blue');
 
-    fire.setLocation({ name: 'Mark', location: centre, color: 'blue' })
+    let id = fire.addLocation({ name: 'Mark', location: centre, color: 'blue' });
+    console.log('added', id);
 
     // Add mock points
     setInterval(() => {
         MockPoints.forEach(m => {
-            gmap.addMarker(m.location, m.name, m.color);
+            //gmap.addMarker(m.location, m.name, m.color);
         })
     },
         3000);

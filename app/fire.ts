@@ -15,26 +15,13 @@ export class Fire {
         this.db = firebase.database().ref('locations');
     }
 
-    setLocation(location: any) {
-        this.db.push(location);
-        //console.log(this.db.key());
+    addLocation(location: any): string {
+        let ref = this.db.push(location);
+        return ref.key;
     }
 
-    // removeItem: function(key) {
-    //     var firebaseRef = firebase.database().ref('todoApp/items');;
-    //     firebaseRef.child(key).remove();
-    // }
+    removeLocation(key: string) {
+        this.db.child(key).remove();
+    }
 
 }
-
-// var usersRef = this.db.child("users");
-// usersRef.set({
-//   alanisawesome: {
-//     date_of_birth: "June 23, 1912",
-//     full_name: "Alan Turing"
-//   },
-//   gracehop: {
-//     date_of_birth: "December 9, 1906",
-//     full_name: "Grace Hopper"
-//   }
-// });
