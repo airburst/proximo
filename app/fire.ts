@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import {LocalStorage} from './storage';
 
 export class Fire {
 
@@ -9,34 +10,35 @@ export class Fire {
         databaseURL: "https://proximo-55720.firebaseio.com",
         storageBucket: "",
     };
+    private localStore = new LocalStorage();
 
     constructor() {
         firebase.initializeApp(this.config);
-        this.db = firebase.database().ref('locations');
+        this.db = firebase.database();
     }
 
-    setItem(id: string, value: any): any {
+    public setItem(collection: string, id: string, value: any): any {
         if (id) {
-            console.log('Updating', id);
-            return this.updateLocation(id, value);
+            return this.updateItem(collection, id, value);
         } else {
-            console.log('Adding', id);
-            return this.addLocation(value);
+            return this.addItem(collection, value);
         }
     }
 
-    addLocation(location: any): string {
-        let ref = this.db.push(location);
+    public addItem(collection: string, location: any): string {
+        let ref = this.db.ref(collection).push(location);
+        this.localStore.set(collection + 'Id', ref.key);
+        console.log(collection + 'Id', ref.key)
         return ref.key;
     }
 
-    updateLocation(id: string, location: any) {
-        this.db.child(id).update(location);
+    public updateItem(collection: string, id: string, location: any) {
+        this.db.ref(collection).child(id).update(location);
         return false;
     }
 
-    removeLocation(key: string) {
-        this.db.child(key).remove();
+    public removeItem(collection: string, key: string) {
+        this.db.ref(collection).child(key).remove();
     }
 
 }

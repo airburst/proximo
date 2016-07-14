@@ -1,7 +1,7 @@
 import {Geo} from './geo';
 import {GoogleMap, LatLng, Marker, Url} from './googlemap';
 import {ScriptLoadService} from './scriptload';
-import {MockPoints} from './mock';
+import {MockPath} from './mock';
 import {Fire} from './fire';
 import {LocalStorage} from './storage';
 
@@ -9,7 +9,6 @@ let fire = new Fire(),
     store = new LocalStorage(),
     locationId = store.get('locationId'),
     gmap: any;
-console.log('Existing locationId', locationId)
 
 window.onload = () => {
     if (!window.google) {
@@ -35,7 +34,7 @@ let loadMap = () => {
             gmap.addMarker(m);
         });
     };
-    fire.db.on('value', updateMap);
+    fire.db.ref('locations').on('value', updateMap);
 };
 
 let getPosition = () => {
@@ -51,19 +50,17 @@ let showMap = (position: any) => {
     let location = { lat: position.latitude, lng: position.longitude };
     gmap.show();
 
-    let updateId = fire.setItem(locationId, {
-        name: 'Mark', 
-        location: location, 
-        color: 'blue' 
-    });
-    console.log('updateId', updateId)
+    let updateId = fire.setItem('locations', locationId, { name: 'Mark', location: location, color: 'blue' });
     store.setIfEmpty('locationId', updateId);
-
-    // Add mock points
-    // setTimeout(() => {
-    //     MockPoints.forEach(m => {
-    //         fire.addLocation(m);
-    //     })
-    // },
-    //     3000);
+    mock();
 }
+
+let mock = () => {
+    let m = new MockPath();
+    m.startMoving();
+}
+
+
+/*
+firebase.database().ref('locations').child('-KMcS5szYoEpMtkvrekI').child('location').update({lng: -2.7016700, lat: 51.1417600});
+*/

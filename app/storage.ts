@@ -14,13 +14,13 @@ export class LocalStorage {
     
     public set(key: string, value: any) {
         window.localStorage.setItem(key, value);
+        console.log('setting store', key, value);   //
     }
 
     public setIfEmpty(key: string, value: any) {
         let item = this.get(key);
         if ((!item) || (item === 'undefined') || (item === null)) {
-            console.log('setting store', key, value);   //
-            window.localStorage.setItem(key, value);
+            this.set(key, value);
         }
     }
 
