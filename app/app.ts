@@ -3,15 +3,13 @@ import {GoogleMap, LatLng, Marker, Url} from './googlemap';
 import {ScriptLoadService} from './scriptload';
 import {MockPoints} from './mock';
 import {Fire} from './fire';
+import {LocalStorage} from './storage';
 
-let fire = new Fire();
-let gmap: any;
-
-// this.db.on('child_added', function (snapshot: any) {
-//     let marker = <Marker>snapshot.val();
-//     let id = snapshot.key;
-//     console.log(id, marker.name, marker.location, marker.color);
-// });
+let fire = new Fire(),
+    store = new LocalStorage(),
+    locationId = store.get('locationId'),
+    gmap: any;
+console.log('Existing locationId', locationId)
 
 window.onload = () => {
     if (!window.google) {
@@ -19,9 +17,9 @@ window.onload = () => {
             scriptPromises = [Url].map(scriptLoad.load);
 
         Promise.all(scriptPromises)
-            .then(() => { 
+            .then(() => {
                 loadMap();
-                getPosition(); 
+                getPosition();
             }, function (value) {
                 console.error('Script not found:', value)
             });
@@ -50,16 +48,22 @@ let getPosition = () => {
 }
 
 let showMap = (position: any) => {
-    let centre = { lat: position.latitude, lng: position.longitude };
+    let location = { lat: position.latitude, lng: position.longitude };
     gmap.show();
 
-    let id = fire.addLocation({ name: 'Mark', location: centre, color: 'blue' });
+    let updateId = fire.setItem(locationId, {
+        name: 'Mark', 
+        location: location, 
+        color: 'blue' 
+    });
+    console.log('updateId', updateId)
+    store.setIfEmpty('locationId', updateId);
 
     // Add mock points
-    setTimeout(() => {
-        MockPoints.forEach(m => {
-            fire.addLocation(m);
-        })
-    },
-        3000);
+    // setTimeout(() => {
+    //     MockPoints.forEach(m => {
+    //         fire.addLocation(m);
+    //     })
+    // },
+    //     3000);
 }

@@ -15,9 +15,24 @@ export class Fire {
         this.db = firebase.database().ref('locations');
     }
 
+    setItem(id: string, value: any): any {
+        if (id) {
+            console.log('Updating', id);
+            return this.updateLocation(id, value);
+        } else {
+            console.log('Adding', id);
+            return this.addLocation(value);
+        }
+    }
+
     addLocation(location: any): string {
         let ref = this.db.push(location);
         return ref.key;
+    }
+
+    updateLocation(id: string, location: any) {
+        this.db.child(id).update(location);
+        return false;
     }
 
     removeLocation(key: string) {
