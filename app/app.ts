@@ -5,61 +5,71 @@ import {MockPath} from './mock';
 import {Fire} from './fire';
 import {LocalStorage} from './storage';
 
-let fire = new Fire(),
-    store = new LocalStorage(),
-    locationId = store.get('locationId'),
+class App {
+    fire: any;
+    store: any;
+    locationId: string;
     gmap: any;
 
-window.onload = () => {
-    if (!window.google) {
-        let scriptLoad = new ScriptLoadService(),
-            scriptPromises = [Url].map(scriptLoad.load);
+    constructor() {
+        this.fire = new Fire();
+        this.store = new LocalStorage();
+        this.locationId = this.store.get('locationId');
+        this.loadGoogleMaps();
+    }
 
-        Promise.all(scriptPromises)
-            .then(() => {
-                loadMap();
-                getPosition();
-            }, function (value) {
-                console.error('Script not found:', value)
+    loadGoogleMaps() {
+        if (!window.google) {
+            let scriptLoad = new ScriptLoadService(),
+                scriptPromises = [Url].map(scriptLoad.load);
+
+            Promise.all(scriptPromises)
+                .then(() => {
+                    this.loadMap();
+                    this.getPosition();
+                }, function (value) {
+                    console.error('Script not found:', value)
+                });
+        }
+    }
+
+    loadMap() {
+        this.gmap = new GoogleMap();
+        let updateMap = (snapshot: any) => {
+            this.gmap.removeMarkers();
+            snapshot.forEach((s: any) => {
+                let m = <Marker>s.val();
+                this.gmap.addMarker(m);
             });
-    }
-}
-
-let loadMap = () => {
-    gmap = new GoogleMap();
-    let updateMap = (snapshot: any) => {
-        gmap.removeMarkers();
-        snapshot.forEach((s: any) => {
-            let m = <Marker>s.val();
-            gmap.addMarker(m);
-        });
+        };
+        this.fire.db.ref('locations').on('value', updateMap);
     };
-    fire.db.ref('locations').on('value', updateMap);
-};
 
-let getPosition = () => {
-    let geo = new Geo();
-    if (geo.isSupported) {
-        geo.getLocation()
-            .then((position: any) => { showMap(position); })
-            .catch((error: any) => { console.log('Error getting location: ' + error.message); });
+    getPosition() {
+        let geo = new Geo();
+        if (geo.isSupported) {
+            geo.getLocation()
+                .then((position: any) => { this.showMap(position); })
+                .catch((error: any) => { console.log('Error getting location: ' + error.message); });
+        }
+    }
+
+    showMap(position: any) {
+        let location = { lat: position.latitude, lng: position.longitude };
+        this.gmap.show();
+
+        let updateId = this.fire.setItem('locations', this.locationId, { name: 'Mark', location: location, color: 'blue' });
+        this.store.setIfEmpty('locationId', updateId);
+        this.mock();
+    }
+
+    mock() {
+        let m = new MockPath();
+        m.startMoving();
     }
 }
 
-let showMap = (position: any) => {
-    let location = { lat: position.latitude, lng: position.longitude };
-    gmap.show();
-
-    let updateId = fire.setItem('locations', locationId, { name: 'Mark', location: location, color: 'blue' });
-    store.setIfEmpty('locationId', updateId);
-    mock();
-}
-
-let mock = () => {
-    let m = new MockPath();
-    m.startMoving();
-}
-
+const app = new App();
 
 /*
 firebase.database().ref('locations').child('-KMcS5szYoEpMtkvrekI').child('location').update({lng: -2.7016700, lat: 51.1417600});
