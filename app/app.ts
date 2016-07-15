@@ -15,17 +15,17 @@ class App {
         this.fire = new Fire();
         this.store = new LocalStorage();
         this.locationId = this.store.get('locationId');
-        this.loadGoogleMaps();
+        this.loadGoogleScripts();
     }
 
-    loadGoogleMaps() {
+    loadGoogleScripts() {
         if (!window.google) {
             let scriptLoad = new ScriptLoadService(),
                 scriptPromises = [Url].map(scriptLoad.load);
 
             Promise.all(scriptPromises)
                 .then(() => {
-                    this.loadMap();
+                    this.initialiseMap();
                     this.getPosition();
                 }, function (value) {
                     console.error('Script not found:', value)
@@ -33,8 +33,10 @@ class App {
         }
     }
 
-    loadMap() {
+    initialiseMap() {
         this.gmap = new GoogleMap();
+
+        // Update markers and fit map when firebase data changes
         let updateMap = (snapshot: any) => {
             this.gmap.removeMarkers();
             snapshot.forEach((s: any) => {
@@ -42,25 +44,26 @@ class App {
                 this.gmap.addMarker(m);
             });
         };
+
         this.fire.db.ref('locations').on('value', updateMap);
     };
 
+
+
     getPosition() {
         let geo = new Geo();
-        if (geo.isSupported) {
-            geo.getLocation()
-                .then((position: any) => { this.showMap(position); })
-                .catch((error: any) => { console.log('Error getting location: ' + error.message); });
-        }
+        geo.getLocation()
+            .then((position: any) => { this.displayMap(position); })
+            .catch((error: any) => { console.log('Error getting location: ' + error.message); });
     }
 
-    showMap(position: any) {
+    displayMap(position: any) {
         let location = { lat: position.latitude, lng: position.longitude };
         this.gmap.show();
 
         let updateId = this.fire.setItem('locations', this.locationId, { name: 'Mark', location: location, color: 'blue' });
         this.store.setIfEmpty('locationId', updateId);
-        this.mock();
+        //this.mock();
     }
 
     mock() {
