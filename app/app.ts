@@ -10,6 +10,7 @@ class App {
     store: any;
     groupId: string;
     locationId: string;
+    groupPath: string;
     gmap: any;
 
     constructor() {
@@ -22,6 +23,7 @@ class App {
     getIds() {
         this.groupId = this.getOrSetGroupId();
         this.locationId = this.store.get('locationId');
+        this.groupPath = 'groups/' + this.groupId + '/locations';
     }
 
     getOrSetGroupId(): string {
@@ -58,7 +60,7 @@ class App {
                 this.gmap.addMarker(m);
             });
         };
-        this.fire.collection('locations').on('value', updateMap);
+        this.fire.collection(this.groupPath).on('value', updateMap);
     };
 
     getPosition() {
@@ -71,14 +73,17 @@ class App {
     displayMap(position: any) {
         let location = { lat: position.latitude, lng: position.longitude };
         this.gmap.show();
-
-        let updateId = this.fire.setItem('locations', this.locationId, { name: 'Mark', location: location, color: 'blue' });
+        let updateId = this.fire.setItem(
+            this.groupPath, 
+            this.locationId, 
+            { name: 'Mark', location: location, color: 'blue' } //TODO: get name from form
+        );
         this.store.setIfEmpty('locationId', updateId);
-        //this.mock();
+        this.addMockUsers();
     }
 
-    mock() {
-        let m = new MockPath();
+    addMockUsers() {
+        let m = new MockPath(this.groupPath);
         m.startMoving();
     }
 }

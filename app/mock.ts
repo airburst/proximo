@@ -197,7 +197,7 @@ export class MockPath {
     index: number;
     interval: any;
 
-    constructor() {
+    constructor(private collection: string) {
         this.index = 0;
     }
 
@@ -211,7 +211,7 @@ export class MockPath {
 
     marker() {
         if (!this.endOfPath()) {
-            firebase.database().ref('locations').child('mockPerson').update(new Marker(this.move(), this.name, this.color));
+            firebase.database().ref(this.collection).child('mockPerson').update(new Marker(this.move(), this.name, this.color));
         } else {
             this.stopMoving();
         }
