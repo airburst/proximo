@@ -21,19 +21,15 @@ class App {
 
     getIds() {
         this.groupId = this.getOrSetGroupId();
-        console.log('groupId', this.groupId)
         this.locationId = this.store.get('locationId');
     }
 
     getOrSetGroupId(): string {
         let g = this.store.get('groupId');
-        if (g) {
-            return g; 
-        } else {
-            let id = this.fire.setItem('groups', g);
-            this.store.setIfEmpty('groupId', id);
-            return id;
-        }
+        if (g) { return g; }
+        let id = this.fire.setItem('groups', g);
+        this.store.setIfEmpty('groupId', id);
+        return id;
     }
 
     loadGoogleScripts() {

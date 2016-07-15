@@ -25,7 +25,6 @@ export class Fire {
     }
 
     public updateItem(collection: string, id: string, value: any) {
-        console.info('collection', collection, 'update id', id, 'value', value)
         this.collection(collection).child(id).update(value);
         return false;
     }
