@@ -11,15 +11,13 @@ export class LocalStorage {
     public get(key: string): any {
         return window.localStorage.getItem(key);
     }
-    
+
     public set(key: string, value: any) {
         window.localStorage.setItem(key, value);
-        console.log('setting store', key, value);   //
     }
 
     public setIfEmpty(key: string, value: any) {
-        let item = this.get(key);
-        if ((!item) || (item === 'undefined') || (item === null)) {
+        if (!this.exists(this.get(key))) {
             this.set(key, value);
         }
     }
@@ -30,5 +28,9 @@ export class LocalStorage {
 
     public clear() {
         window.localStorage.clear();
+    }
+
+    exists(item: string): boolean {
+        return ((item) && (item !== 'undefined') && (item !== undefined));
     }
 }

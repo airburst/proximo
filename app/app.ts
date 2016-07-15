@@ -8,14 +8,32 @@ import {LocalStorage} from './storage';
 class App {
     fire: any;
     store: any;
+    groupId: string;
     locationId: string;
     gmap: any;
 
     constructor() {
         this.fire = new Fire();
         this.store = new LocalStorage();
-        this.locationId = this.store.get('locationId');
+        this.getIds();
         this.loadGoogleScripts();
+    }
+
+    getIds() {
+        this.groupId = this.getOrSetGroupId();
+        console.log('groupId', this.groupId)
+        this.locationId = this.store.get('locationId');
+    }
+
+    getOrSetGroupId(): string {
+        let g = this.store.get('groupId');
+        if (g) {
+            return g; 
+        } else {
+            let id = this.fire.setItem('groups', g);
+            this.store.setIfEmpty('groupId', id);
+            return id;
+        }
     }
 
     loadGoogleScripts() {
@@ -44,11 +62,8 @@ class App {
                 this.gmap.addMarker(m);
             });
         };
-
-        this.fire.db.ref('locations').on('value', updateMap);
+        this.fire.collection('locations').on('value', updateMap);
     };
-
-
 
     getPosition() {
         let geo = new Geo();
