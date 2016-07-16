@@ -4,6 +4,7 @@ import {ScriptLoadService} from './scriptload';
 import {MockPath} from './mock';
 import {Fire} from './fire';
 import {LocalStorage} from './storage';
+import {QueryParams} from './queryparams';
 
 class App {
     fire: any;
@@ -12,12 +13,24 @@ class App {
     locationId: string;
     groupPath: string;
     gmap: any;
+    params: any;
 
     constructor() {
         this.fire = new Fire();
-        this.store = new LocalStorage();
-        this.getIds();
+        this.initialiseData();
         this.loadGoogleScripts();
+    }
+
+    initialiseData() {
+        this.store = new LocalStorage();
+        this.setGroupFromUrl();
+        this.getIds();
+    }
+
+    setGroupFromUrl() {
+        this.params = new QueryParams(window.location.href).params;
+        if (this.params.group) { this.store.set('groupId', this.params.group); }
+        //NOTE: may want to push a collection of groupIds into store
     }
 
     getIds() {
@@ -79,7 +92,7 @@ class App {
             { name: 'Mark', location: location, color: 'blue' } //TODO: get name from form
         );
         this.store.setIfEmpty('locationId', updateId);
-        this.addMockUsers();
+        //this.addMockUsers();
     }
 
     addMockUsers() {
