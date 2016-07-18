@@ -8,7 +8,7 @@ module.exports = {
         secure: true, // use SSL 
         auth: {
             user: 'airburst8@gmail.com',
-            pass: 'Xtermin8#'
+            pass: 'PASS'
         }
     },
 
