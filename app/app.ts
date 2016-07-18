@@ -11,14 +11,17 @@ class App {
     store: any;
     groupId: string;
     locationId: string;
+    location: LatLng;
     groupPath: string;
     gmap: any;
     params: any;
+    distances: any;
 
     constructor() {
         this.fire = new Fire();
         this.initialiseData();
         this.loadGoogleScripts();
+        this.distances = new Map;
     }
 
     initialiseData() {
@@ -64,17 +67,24 @@ class App {
 
     initialiseMap() {
         this.gmap = new GoogleMap();
-
         // Update markers and fit map when firebase data changes
         let updateMap = (snapshot: any) => {
             this.gmap.removeMarkers();
             snapshot.forEach((s: any) => {
                 let m = <Marker>s.val();
+                this.updateDistance(s.key, m);
                 this.gmap.addMarker(m);
             });
+            this.showDistances();
         };
         this.fire.collection(this.groupPath).on('value', updateMap);
     };
+
+    updateDistance(key: string, marker: Marker) {
+        if (key !== this.locationId) {
+            this.distances.set(key, this.gmap.distanceBetween(this.location, marker.location));
+        }
+    }
 
     getPosition() {
         let geo = new Geo();
@@ -84,15 +94,21 @@ class App {
     }
 
     displayMap(position: any) {
-        let location = { lat: position.latitude, lng: position.longitude };
+        this.location = { lat: position.latitude, lng: position.longitude };
         this.gmap.show();
         let updateId = this.fire.setItem(
             this.groupPath, 
             this.locationId, 
-            { name: 'Mark', location: location, color: 'blue' } //TODO: get name from form
+            { name: 'Mark', location: this.location, color: 'blue'} //TODO: get name from form
         );
         this.store.setIfEmpty('locationId', updateId);
         //this.addMockUsers();
+    }
+
+    showDistances() {
+        this.distances.forEach((value: any, key: string) => {
+            console.log(key, value);
+        });
     }
 
     addMockUsers() {

@@ -81,28 +81,22 @@ export class GoogleMap {
         this.map.fitBounds(this.bounds);
     }
 
-    public distanceBetween(point1: Marker, point2: Marker): number {
-        let d1 = window.google.maps.geometry.spherical.computeDistanceBetween(point1.location, point2.location),
-            d2 = window.google.maps.geometry.spherical.computeDistanceBetween(point2.location, point1.location);
-        return Math.min(d1, d2);
+    public distanceBetween(latLng1: LatLng, latLng2: LatLng): number {
+        var R = 6371;
+        var dLat = this.deg2rad(latLng2.lat - latLng1.lat);
+        var dLon = this.deg2rad(latLng2.lng - latLng1.lng);
+        var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(this.deg2rad(latLng1.lat)) * Math.cos(this.deg2rad(latLng2.lat)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2)
+            ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c;
+        return d;
     }
 
-    // function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    //     var R = 6371; // Radius of the earth in km
-    //     var dLat = deg2rad(lat2 - lat1);  // deg2rad below
-    //     var dLon = deg2rad(lon2 - lon1);
-    //     var a =
-    //         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    //         Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    //         Math.sin(dLon / 2) * Math.sin(dLon / 2)
-    //         ;
-    //     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    //     var d = R * c; // Distance in km
-    //     return d;
-    // }
-
-    // function deg2rad(deg) {
-    //     return deg * (Math.PI / 180)
-    // }
+    private deg2rad(deg: number): number {
+        return deg * (Math.PI / 180)
+    }
 
 }
