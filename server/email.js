@@ -7,7 +7,7 @@ module.exports = {
         port: 465,
         secure: true, // use SSL 
         auth: {
-            user: 'airburst8@gmail.com',
+            user: 'USER',
             pass: 'PASS'
         }
     },
