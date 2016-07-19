@@ -2,14 +2,15 @@
   "name": "email",
   "version": "1.0.0",
   "description": "Email API",
-  "main": "server.js",
+  "main": "email-api.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node email-api.js"
   },
   "author": "Mark Fairhurst",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "config": "^1.21.0",
     "express": "^4.14.0",
     "nodemailer": "^2.5.0"
   }

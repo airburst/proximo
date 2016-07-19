@@ -1,4 +1,8 @@
 var nodemailer = require('nodemailer');
+var config = require('config');
+
+var user = config.get('gmail.user');
+var pass = config.get('gmail.pass');
 
 module.exports = {
 
@@ -7,8 +11,8 @@ module.exports = {
         port: 465,
         secure: true, // use SSL 
         auth: {
-            user: 'USER',
-            pass: 'PASS'
+            user: user,
+            pass: pass
         }
     },
 
