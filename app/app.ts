@@ -1,3 +1,4 @@
+///<reference path="../typings/whatwg-fetch.d.ts"/>
 import {Geo} from './geo';
 import {GoogleMap, LatLng, Marker, Url} from './googlemap';
 import {ScriptLoadService} from './scriptload';
@@ -6,6 +7,7 @@ import {Fire} from './fire';
 import {LocalStorage} from './storage';
 import {QueryParams} from './queryparams';
 import {EmailTemplates} from './email-templates';
+import 'whatwg-fetch';
 
 class App {
     fire: any;
@@ -98,9 +100,9 @@ class App {
         this.location = { lat: position.latitude, lng: position.longitude };
         this.gmap.show();
         let updateId = this.fire.setItem(
-            this.groupPath, 
-            this.locationId, 
-            { name: 'Mark', location: this.location, color: 'blue'} //TODO: get name from form
+            this.groupPath,
+            this.locationId,
+            { name: 'Mark', location: this.location, color: 'blue' } //TODO: get name from form
         );
         this.store.setIfEmpty('locationId', updateId);
         //this.addMockUsers();
@@ -115,12 +117,26 @@ class App {
     sendInvitation(to: string, groupId: string) {
         let template = EmailTemplates.invitation,
             emailBody = {
-                to: to, 
+                to: to,
                 subject: template.subject,
                 text: template.text(groupId),
                 html: template.html(groupId)
             }
-        // Send it using ajax        
+        // Send it using ajax 
+        fetch('http://localhost:8888/email', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(emailBody)
+        }).then(function (response: any) {
+            return response.json();
+        }).then(function(j: any) {
+            console.info(j);
+        }).catch(function (err: any) {
+            console.error('Error sending email', err);
+        });
     }
 
     addMockUsers() {
