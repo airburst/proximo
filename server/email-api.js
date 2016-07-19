@@ -16,23 +16,20 @@ var router = express.Router();
 
 // middleware to use for all requests
 router.use(function (req, res, next) {
-    //console.log('Something is happening.');
     next();
 });
 
 router.route('/email').post(function (req, res) {
-    var to = 'mark@fairhursts.net';
-    var group = '12345';
-    // var subject = 'Share your location with Mark';
-    // var bodyText = 'Hi,\n\nHow are you today?\n\nFrom Proximo';
-    // var bodyHtml = '<p>Hi,</p><p>How are you today?</p><p>From Proximo</p>';
+    if (!(req.body.to)) { handleError(res, 'Invalid user input', 'Must provide an address to send to.', 400); }
+    var to = req.body.to;
+    if (!(req.body.subject)) { handleError(res, 'Invalid user input', 'Must provide a message subject.', 400); }
+    var subject = req.body.subject;
+    if (!(req.body.text)) { handleError(res, 'Invalid user input', 'Must provide a message subject.', 400); }
+    var text = req.body.text;
+    var html = req.body.text;
+    if (req.body.html) { html = req.body.html; }
 
-    if (!(req.body.to)) {
-        handleError(res, 'Invalid user input', 'Must provide an address to send to.', 400);
-    }
-
-    var result = email.send(to, group);
-console.log(result);
+    var result = email.send(to, subject, text, html);
     res.json({message: 'Email sent to ' + req.body.to});
 });
 

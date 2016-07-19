@@ -5,6 +5,7 @@ import {MockPath} from './mock';
 import {Fire} from './fire';
 import {LocalStorage} from './storage';
 import {QueryParams} from './queryparams';
+import {EmailTemplates} from './email-templates';
 
 class App {
     fire: any;
@@ -109,6 +110,17 @@ class App {
         this.distances.forEach((value: any, key: string) => {
             console.log(key, value);
         });
+    }
+
+    sendInvitation(to: string, groupId: string) {
+        let template = EmailTemplates.invitation,
+            emailBody = {
+                to: to, 
+                subject: template.subject,
+                text: template.text(groupId),
+                html: template.html(groupId)
+            }
+        // Send it using ajax        
     }
 
     addMockUsers() {
