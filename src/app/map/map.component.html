@@ -1,0 +1,17 @@
+<div class="map-page">
+  <div id="map"></div>
+
+  <md-toolbar [color]="primary">
+    <button md-icon-button aria-label="Centre on me" (click)="centreMe()">
+      <md-icon class="md-24">my_location</md-icon>
+    </button>
+    <button md-icon-button aria-label="Show everyone" (click)="scaleToFit()">
+      <md-icon class="md-24">zoom_out_map</md-icon>
+    </button>
+    <span class="fill-space"></span>
+    <button md-button aria-label="Invite other people" (click)="addPeople()">
+      ADD
+    </button>
+  </md-toolbar>
+
+</div>

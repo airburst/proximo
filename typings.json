@@ -1,5 +1,11 @@
 {
-  "dependencies": {
-    "firebase": "registry:npm/firebase#3.0.5+20160705215914"
+  "ambientDevDependencies": {
+    "angular-protractor": "registry:dt/angular-protractor#1.5.0+20160425143459",
+    "jasmine": "registry:dt/jasmine#2.2.0+20160412134438",
+    "selenium-webdriver": "registry:dt/selenium-webdriver#2.44.0+20160317120654",
+    "firebase": "https://gist.githubusercontent.com/cdcarson/28399c50b02bf6c507fbf5b7b30daa31/raw/fa089d231ca4253d4715f8161efc6af74c972dfa/firebase-sdk-3-typings.d.ts"
+  },
+  "ambientDependencies": {
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654"
   }
 }
