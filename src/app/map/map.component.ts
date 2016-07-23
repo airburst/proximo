@@ -28,7 +28,6 @@ export class MapComponent implements OnInit {
     map: any;
     locationId: string;
     joinId: string = undefined;
-    contacts: string[] = [];
     options: any = { zoom: 12 };
     icon: any = {
         path: window.google.maps.SymbolPath.CIRCLE,
@@ -49,58 +48,42 @@ export class MapComponent implements OnInit {
     ) {
         this.markers = new Map;
         this.locationId = this.localstorageService.get('proximoLocationId');
-        this.initialiseContacts();
+        this.setJoinIdFromUrl();
         locationsService.locations$
             .delay(500)
             .subscribe((v) => {
-                this.setContacts(this.locationId, v);
-                if (this.joinId) { this.linkThemToMe(this.joinId, v) }
-                this.displayMarkers(v);
+                if (this.locationId === null) { this.locationId = this.localstorageService.get('proximoLocationId'); }
+                if (this.joinId !== undefined) { this.linkUsers(this.joinId, v); }
+                else { this.displayMarkers(v); }
             });
     }
 
-    initialiseContacts() {
-        this.contacts = JSON.parse(this.localstorageService.get('proximoContacts')) || [];
-        this.route.params
-            .delay(2000)    // Allow enough time to create new location before linking user
-            .subscribe(params => { 
-                if (params['id']) { 
-                    this.joinId = params['id']; 
-                    this.linkUsers(this.joinId); 
-                } 
-            });
-    }
-
-    linkUsers(theirId: string) {
-        this.linkMeToThem(theirId);
-    }
-
-    linkMeToThem(theirId: string) {
-        // TODO: show modal to confirm
-        this.contacts.splice(this.contacts.indexOf(this.locationId), 1); 
-        this.contacts = uniqueArray(this.contacts.concat(theirId));
-        this.localstorageService.set('proximoContacts', JSON.stringify(this.contacts));
-        this.locationsService.updateByKey(this.locationId, { contacts: this.contacts, updated: new Date().toISOString() }); // Triggers new stream
-    }
-
-    linkThemToMe(theirId: string, locations: ILocation[]) {
-        this.joinId = undefined;
-        this.locationsService.updateByKey(theirId, { contacts: this.getContacts(theirId, locations), updated: new Date().toISOString() });
-        this.router.navigate(['/'], { relativeTo: this.route });
-    }    
-
-    setContacts(id: string, locations: ILocation[]) {
-        this.contacts = this.getContacts(id, locations);
-    }
-
-    getContacts(id: string, locations: ILocation[]): string[] {
-        let c = [this.locationId];
-        locations.forEach((l) => {
-            if (l.$key === id) {
-                if (l.contacts) { c = uniqueArray(c.concat(l.contacts)); }
-            }
+    setJoinIdFromUrl() {
+        this.route.params.subscribe(params => {
+            if (params['id']) { this.joinId = params['id']; }
         });
-        return c;
+    }
+
+    linkUsers(theirId: string, locations: ILocation[]) {
+        // TODO: show modal to confirm
+        locations.forEach((l) => {
+            if (this.isMyLocationId(l)) { this.linkMeToThem(theirId, l); }
+            if (l.$key === theirId) { this.linkThemToMe(l); }
+        });
+        this.joinId = undefined;
+        this.router.navigate(['/'], { relativeTo: this.route });
+    }
+
+    linkMeToThem(theirId: string, myLocation: ILocation) {
+        let c: string[] = [theirId];
+        if (myLocation.contacts) { c = uniqueArray(c.concat(myLocation.contacts)); }
+        this.locationsService.updateByKey(this.locationId, { contacts: c, updated: new Date().toISOString() });
+    }
+
+    linkThemToMe(theirLocation: ILocation) {
+        let c: string[] = [this.locationId];
+        if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
+        this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: new Date().toISOString() });
     }
 
     ngOnInit() {
@@ -123,15 +106,21 @@ export class MapComponent implements OnInit {
 
     private displayMarkers(markers: ILocation[]) {
         this.removeAllMarkers();
-        this.myContacts(markers).forEach((m) => {
-            this.addMarker(m);
+        markers.forEach((m) => {
+            if (this.containsMyLocationId(m)) { this.addMarker(m); }
         });
     }
 
-    myContacts(collection: ILocation[]) {
-        return collection.filter((item) => {
-            return (this.contacts.indexOf(item.$key) > -1);
-        });
+    private containsMyLocationId(location: ILocation): boolean {
+        return (this.isMyLocationId(location) || this.isLinkedToMyLocationId(location)) ? true : false;
+    }
+
+    private isMyLocationId(location: ILocation): boolean {
+        return (location.$key === this.locationId) ? true : false;
+    }
+
+    private isLinkedToMyLocationId(location: ILocation): boolean {
+        return location.contacts && (location.contacts.indexOf(this.locationId) > -1) ? true : false;
     }
 
     private addMarker(marker: ILocation) {
@@ -192,23 +181,23 @@ export class MapComponent implements OnInit {
         console.log('Send invitations')
     }
 
-    public distanceBetween(latLng1: LatLng, latLng2: LatLng): number {
-        var R = 6371;
-        var dLat = this.deg2rad(latLng2.lat - latLng1.lat);
-        var dLon = this.deg2rad(latLng2.lng - latLng1.lng);
-        var a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(this.deg2rad(latLng1.lat)) * Math.cos(this.deg2rad(latLng2.lat)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2)
-            ;
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d;
-    }
+    // public distanceBetween(latLng1: LatLng, latLng2: LatLng): number {
+    //     var R = 6371;
+    //     var dLat = this.deg2rad(latLng2.lat - latLng1.lat);
+    //     var dLon = this.deg2rad(latLng2.lng - latLng1.lng);
+    //     var a =
+    //         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    //         Math.cos(this.deg2rad(latLng1.lat)) * Math.cos(this.deg2rad(latLng2.lat)) *
+    //         Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    //         ;
+    //     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    //     var d = R * c;
+    //     return d;
+    // }
 
-    private deg2rad(deg: number): number {
-        return deg * (Math.PI / 180)
-    }
+    // private deg2rad(deg: number): number {
+    //     return deg * (Math.PI / 180)
+    // }
 
 }
 
