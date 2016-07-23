@@ -18,7 +18,8 @@ module.exports = function(defaults) {
       '@angular/**/*.+(js|js.map)',
       '@angular2-material/**/*',
       'angularfire2/**/*.js',
-      'firebase/*.js'
+      'firebase/*.js',
+      'moment/*.js'
     ]
   });
 };

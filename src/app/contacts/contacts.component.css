@@ -16,3 +16,13 @@
 .fill-space {
   flex: 1 1 auto;
 }
+
+.name {
+    min-width: 60px;
+}
+
+.time {
+    color: #666;
+    padding-left: 20px;
+    font-size: 0.8em;
+}

@@ -9,7 +9,8 @@
 const map: any = {
   '@angular2-material': 'vendor/@angular2-material',
   'firebase': 'vendor/firebase/firebase.js',
-  'angularfire2': 'vendor/angularfire2'
+  'angularfire2': 'vendor/angularfire2',
+  'moment': 'vendor/moment/moment.js'
 };
 
 /** User packages configuration. */

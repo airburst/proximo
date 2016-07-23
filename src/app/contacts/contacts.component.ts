@@ -1,10 +1,11 @@
-import { Component, Input, EventEmitter } from '@angular/core';
+import { Component, Input, EventEmitter, OnInit } from '@angular/core';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
 import { MdToolbar } from '@angular2-material/toolbar';
 import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import { ILocation } from '../location';
+import * as moment from 'moment';
 
 @Component({
   moduleId: module.id,
@@ -15,12 +16,18 @@ import { ILocation } from '../location';
   directives: [MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar],
   providers: [MdIconRegistry]
 })
-export class ContactsComponent {
+export class ContactsComponent implements OnInit {
 
-  constructor() { }
+  constructor() {}
 
   @Input() contacts: ILocation[];
   @Input() show: boolean;
   //@Output() clear = new EventEmitter();
+
+  ngOnInit() { }
+
+  formatDate(dateTime: string): string {
+    return moment(dateTime).fromNow();
+  }
 
 }
