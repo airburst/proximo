@@ -27,6 +27,7 @@ export class MapComponent implements OnInit {
 
     map: any;
     locationId: string;
+    contacts: ILocation[] = [];
     joinId: string = undefined;
     options: any = { zoom: 12 };
     icon: any = {
@@ -51,10 +52,11 @@ export class MapComponent implements OnInit {
         this.setJoinIdFromUrl();
         locationsService.locations$
             .delay(500)
-            .subscribe((v) => {
+            .subscribe((l) => {
                 if (this.locationId === null) { this.locationId = this.localstorageService.get('proximoLocationId'); }
-                if (this.joinId !== undefined) { this.linkUsers(this.joinId, v); }
-                else { this.displayMarkers(v); }
+                if (this.contacts.length === 0) { this.setContacts(l); }
+                if (this.joinId !== undefined) { this.linkUsers(this.joinId, l); }
+                else { this.displayMarkers(l); }
             });
     }
 
@@ -86,6 +88,15 @@ export class MapComponent implements OnInit {
         this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: new Date().toISOString() });
     }
 
+    setContacts(locations: ILocation[]) {
+        this.contacts = [];
+        locations.forEach((l) => {
+            if (this.containsMyLocationId(l)) { 
+                this.contacts.push(l);
+            }
+        });
+    }
+
     ngOnInit() {
         this.resetBounds();
         this.show();
@@ -107,7 +118,9 @@ export class MapComponent implements OnInit {
     private displayMarkers(markers: ILocation[]) {
         this.removeAllMarkers();
         markers.forEach((m) => {
-            if (this.containsMyLocationId(m)) { this.addMarker(m); }
+            if (this.containsMyLocationId(m)) { 
+                this.addMarker(m);
+            }
         });
     }
 

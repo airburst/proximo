@@ -1,6 +1,13 @@
 <div class="map-page">
   <div id="map"></div>
 
+  <md-list>
+    <md-list-item *ngFor="let contact of contacts">
+      {{contact.name}}
+    </md-list-item>
+    <md-divider></md-divider>
+  </md-list>
+
   <md-toolbar [color]="primary">
     <button md-icon-button aria-label="Centre on me" (click)="centreMe()">
       <md-icon class="md-24">my_location</md-icon>
