@@ -40,6 +40,7 @@ export class MapComponent implements OnInit {
     };
     markers: any;
     bounds: any;
+    showContacts: boolean = false;
 
     constructor(
         private router: Router,
@@ -84,6 +85,7 @@ export class MapComponent implements OnInit {
 
     linkThemToMe(theirLocation: ILocation) {
         let c: string[] = [this.locationId];
+        this.contacts.push(theirLocation);
         if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
         this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: new Date().toISOString() });
     }
@@ -192,6 +194,10 @@ export class MapComponent implements OnInit {
 
     private addPeople($event) {
         console.log('Send invitations')
+    }
+
+    toggleContacts($event) {
+        this.showContacts = !this.showContacts;
     }
 
     // public distanceBetween(latLng1: LatLng, latLng2: LatLng): number {

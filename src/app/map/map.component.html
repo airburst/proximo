@@ -1,21 +1,31 @@
 <div class="map-page">
   <div id="map"></div>
 
-  <md-list>
-    <md-list-item *ngFor="let contact of contacts">
-      {{contact.name}}
-    </md-list-item>
-    <md-divider></md-divider>
-  </md-list>
+  <div *ngIf="showContacts" class="contacts-list-container">
+    <md-list class="contacts-list">
+      <md-list-item *ngFor="let contact of contacts">
+        <div class="contact-row">
+          {{contact.name}}
+          <span class="fill-space"></span> Distance
+        </div>
+      </md-list-item>
+      <md-divider></md-divider>
+    </md-list>
+  </div>
 
   <md-toolbar [color]="primary">
     <button md-icon-button aria-label="Centre on me" (click)="centreMe()">
       <md-icon class="md-24">my_location</md-icon>
     </button>
-    <button md-icon-button aria-label="Show everyone" (click)="scaleToFit()">
+    <button md-icon-button aria-label="Scale map to fit" (click)="scaleToFit()">
       <md-icon class="md-24">zoom_out_map</md-icon>
     </button>
+    <button md-icon-button aria-label="Show contacts list" (click)="toggleContacts()">
+      <md-icon class="md-24">people</md-icon>
+    </button>
+
     <span class="fill-space"></span>
+
     <button md-button aria-label="Invite other people" (click)="addPeople()">
       ADD
     </button>

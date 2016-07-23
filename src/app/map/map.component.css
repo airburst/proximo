@@ -20,3 +20,18 @@ md-toolbar {
 .fill-space {
   flex: 1 1 auto;
 }
+
+.contacts-list-container,
+.contacts-list  {
+    max-height: 153px;  /* 3 items plus 8px top padding */
+}
+
+.contacts-list {
+    overflow-y: scroll;
+}
+
+.contact-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
