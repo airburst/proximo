@@ -1,0 +1,11 @@
+<div *ngIf="show" class="contacts-list-container">
+  <md-list class="contacts-list">
+    <md-list-item *ngFor="let contact of contacts">
+      <div class="contact-row">
+        {{contact.name}}
+        <span class="fill-space"></span> Distance
+      </div>
+    </md-list-item>
+    <md-divider></md-divider>
+  </md-list>
+</div>

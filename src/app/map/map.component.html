@@ -1,17 +1,8 @@
 <div class="map-page">
   <div id="map"></div>
 
-  <div *ngIf="showContacts" class="contacts-list-container">
-    <md-list class="contacts-list">
-      <md-list-item *ngFor="let contact of contacts">
-        <div class="contact-row">
-          {{contact.name}}
-          <span class="fill-space"></span> Distance
-        </div>
-      </md-list-item>
-      <md-divider></md-divider>
-    </md-list>
-  </div>
+  <app-contacts [contacts]="contacts"
+                [show]="showContacts"></app-contacts>
 
   <md-toolbar [color]="primary">
     <button md-icon-button aria-label="Centre on me" (click)="centreMe()">

@@ -13,6 +13,7 @@ import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import {ILocation, Location, LatLng} from '../location';
 import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
+import {ContactsComponent} from '../contacts/contacts.component';
 import {flatten, uniqueArray} from '../utils';
 
 @Component({
@@ -20,7 +21,7 @@ import {flatten, uniqueArray} from '../utils';
     selector: 'app-map',
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
-    directives: [ROUTER_DIRECTIVES, MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar],
+    directives: [ROUTER_DIRECTIVES, MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar, ContactsComponent],
     providers: [MdIconRegistry, LocationsService, LocalstorageService]
 })
 export class MapComponent implements OnInit {
