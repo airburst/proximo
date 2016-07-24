@@ -7,6 +7,7 @@ import { EmailTemplates } from './email-templates';
 export class EmailService {
 
   url: string = 'http://api.fairhursts.net/email';
+  //from: string = 'noreply@proximate.fairhursts.net';
 
   constructor(private http: Http) { }
 
@@ -22,7 +23,21 @@ export class EmailService {
   send(to: string, subject: string, text: string, html?: string): Observable<any> {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post(this.url, { headers: headers }).map(res => res.json());
+
+    return this.http.post(
+      this.url,
+      this.payload(to, subject, text, html),
+      { headers: headers }
+    ).map(res => res.json());
+  }
+
+  payload(to: string, subject: string, text: string, html?: string): any {
+    return {
+      to: to,
+      subject: subject,
+      text: text,
+      html: (html) ? html : text
+    };
   }
 
 }

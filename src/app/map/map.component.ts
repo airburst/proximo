@@ -205,8 +205,7 @@ export class MapComponent implements OnInit {
         this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
             .subscribe(
                 data => console.log(data),
-                err => console.log('Error sending email', err),
-                () => console.log('Email Sent')
+                err => console.log('Error sending email', err)
             );
     }
 
