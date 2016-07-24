@@ -1,9 +1,10 @@
 ///<reference path="../../../typings/window.extend.d.ts"/>
 import { Component, OnInit } from '@angular/core';
-import {Observable} from 'rxjs';
-import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/pluck';
+import 'rxjs/add/operator/toArray';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
@@ -28,7 +29,9 @@ export class MapComponent implements OnInit {
 
     map: any;
     locationId: string;
-    contacts: ILocation[] = [];
+    locations$: Observable<ILocation[]>;
+    contacts$: Observable<ILocation[]>;
+    me$: Observable<ILocation>;
     joinId: string = undefined;
     options: any = { zoom: 12 };
     icon: any = {
@@ -52,11 +55,12 @@ export class MapComponent implements OnInit {
         this.markers = new Map;
         this.locationId = this.localstorageService.get('proximoLocationId');
         this.setJoinIdFromUrl();
-        locationsService.locations$
+        this.locations$ = locationsService.locations$;
+        this.locations$
             .delay(500)
             .subscribe((l) => {
                 if (this.locationId === null) { this.locationId = this.localstorageService.get('proximoLocationId'); }
-                if (this.contacts.length === 0) { this.setContacts(l); }
+                this.filterContacts(l);
                 if (this.joinId !== undefined) { this.linkUsers(this.joinId, l); }
                 else { this.displayMarkers(l); }
             });
@@ -86,23 +90,28 @@ export class MapComponent implements OnInit {
 
     linkThemToMe(theirLocation: ILocation) {
         let c: string[] = [this.locationId];
-        this.contacts.push(theirLocation);
         if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
         this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: new Date().toISOString() });
     }
 
-    setContacts(locations: ILocation[]) {
-        this.contacts = [];
-        locations.forEach((l) => {
-            if (this.containsMyLocationId(l)) { 
-                this.contacts.push(l);
-            }
-        });
-    }
-
     ngOnInit() {
+        this.me$ = this.myLocation();
+
         this.resetBounds();
         this.show();
+    }
+
+    myLocation(): Observable<ILocation> {
+        return this.locations$
+            .flatMap((data) => data)
+            .filter(l => l.$key === this.locationId);
+    }
+
+    filterContacts(locations: ILocation[]): void {
+        let array = locations.filter((l) => {
+            return this.isLinkedToMyLocationId(l);
+        });
+        this.contacts$ = Observable.of(array);
     }
 
     private resetBounds() {
@@ -200,24 +209,6 @@ export class MapComponent implements OnInit {
     toggleContacts($event) {
         this.showContacts = !this.showContacts;
     }
-
-    // public distanceBetween(latLng1: LatLng, latLng2: LatLng): number {
-    //     var R = 6371;
-    //     var dLat = this.deg2rad(latLng2.lat - latLng1.lat);
-    //     var dLon = this.deg2rad(latLng2.lng - latLng1.lng);
-    //     var a =
-    //         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    //         Math.cos(this.deg2rad(latLng1.lat)) * Math.cos(this.deg2rad(latLng2.lat)) *
-    //         Math.sin(dLon / 2) * Math.sin(dLon / 2)
-    //         ;
-    //     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    //     var d = R * c;
-    //     return d;
-    // }
-
-    // private deg2rad(deg: number): number {
-    //     return deg * (Math.PI / 180)
-    // }
 
 }
 

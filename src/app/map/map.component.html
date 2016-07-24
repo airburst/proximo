@@ -1,7 +1,8 @@
 <div class="map-page">
   <div id="map"></div>
 
-  <app-contacts [contacts]="contacts"
+  <app-contacts [contacts]="contacts$ | async"
+                [me]="me$ | async"
                 [show]="showContacts"></app-contacts>
 
   <md-toolbar [color]="primary">

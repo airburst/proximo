@@ -3,11 +3,18 @@
     <md-list-item *ngFor="let contact of contacts">
       <div class="contact-row">
         <span class="name">{{contact.name}}</span>
-        <span class="time"><i>{{formatDate(contact.updated)}}</i></span>
         <span class="fill-space"></span>
-        <span class="badge">200m</span>
+        <span class="time"><i>{{formatDate(contact.updated)}}</i></span>
+        <span class="label label-success">200m</span>
       </div>
     </md-list-item>
     <md-divider></md-divider>
+    <md-list-item>
+      <div class="contact-row">
+        <span class="name">{{me.name}}</span>
+        <span class="fill-space"></span>
+        <span class="time"><i>{{formatDate(me.updated)}}</i></span>
+      </div>
+    </md-list-item>
   </md-list>
 </div>
