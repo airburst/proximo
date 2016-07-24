@@ -1,6 +1,10 @@
 .contacts-list-container,
 .contacts-list  {
-    max-height: 153px;  /* 3 items plus 8px top padding */
+    max-height: 153px;  /* 3 items plus 8px top padding plus 1px divider */
+}
+
+.me {
+    height: 48px;
 }
 
 .contacts-list {
