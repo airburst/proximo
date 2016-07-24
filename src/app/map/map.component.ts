@@ -202,11 +202,12 @@ export class MapComponent implements OnInit {
     }
 
     private addPeople($event) {
-        this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
-            .subscribe(
-            data => console.log(data),
-            err => console.log('Error sending email', err)
-            );
+        this.router.navigate(['../invite/', this.locationId], { relativeTo: this.route });
+        //this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
+            // .subscribe(
+            // data => console.log(data),
+            // err => console.log('Error sending email', err)
+            // );
     }
 
     toggleContacts($event) {
