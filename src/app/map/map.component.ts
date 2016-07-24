@@ -3,8 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/pluck';
-import 'rxjs/add/operator/toArray';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
@@ -14,6 +12,7 @@ import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import {ILocation, Location, LatLng} from '../location';
 import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
+import {EmailService} from '../email.service';
 import {ContactsComponent} from '../contacts/contacts.component';
 import {flatten, uniqueArray} from '../utils';
 
@@ -23,7 +22,7 @@ import {flatten, uniqueArray} from '../utils';
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
     directives: [ROUTER_DIRECTIVES, MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar, ContactsComponent],
-    providers: [MdIconRegistry, LocationsService, LocalstorageService]
+    providers: [MdIconRegistry, LocationsService, LocalstorageService, EmailService]
 })
 export class MapComponent implements OnInit {
 
@@ -50,7 +49,8 @@ export class MapComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private locationsService: LocationsService,
-        private localstorageService: LocalstorageService
+        private localstorageService: LocalstorageService,
+        private emailService: EmailService
     ) {
         this.markers = new Map;
         this.locationId = this.localstorageService.get('proximoLocationId');
@@ -202,7 +202,12 @@ export class MapComponent implements OnInit {
     }
 
     private addPeople($event) {
-        console.log('Send invitations')
+        this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
+            .subscribe(
+                data => console.log(data),
+                err => console.log('Error sending email', err),
+                () => console.log('Email Sent')
+            );
     }
 
     toggleContacts($event) {
