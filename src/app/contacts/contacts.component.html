@@ -1,7 +1,7 @@
 <md-list class="contacts-list">
   <div *ngIf="show" class="contacts-list-container">
     <md-list-item *ngFor="let contact of contacts">
-      <div class="contact-row">
+      <div class="contact-row" (click)="centre.emit(contact.$key)">
         <span class="name">{{contact.name}}</span>
         <span class="fill-space"></span>
         <span class="time"><i>{{formatDate(contact.updated)}}</i></span>
@@ -12,7 +12,7 @@
   </div>
   <div *ngIf="show" class="me">
     <md-list-item>
-      <div class="contact-row">
+      <div class="contact-row" (click)="centre.emit(me.$key)">
         <span class="name">{{me.name}}</span>
         <span class="fill-space"></span>
         <span class="time"><i>{{formatDate(me.updated)}}</i></span>

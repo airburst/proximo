@@ -3,7 +3,8 @@
 
   <app-contacts [contacts]="contacts$ | async"
                 [me]="me$ | async"
-                [show]="showContacts"></app-contacts>
+                [show]="showContacts"
+                (centre)="centreMe($event)"></app-contacts>
 
   <md-toolbar [color]="primary">
     <button md-icon-button aria-label="Centre on me" (click)="centreMe()">

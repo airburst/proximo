@@ -191,9 +191,8 @@ export class MapComponent implements OnInit {
         this.resetBounds();
     }
 
-    private centreMe($event) {
-        let key = this.localstorageService.get('proximoLocationId'),
-            me = this.findInMarkersList(key);
+    private centreMe(key: string = this.localstorageService.get('proximoLocationId')) {
+        let me = this.findInMarkersList(key);
         this.map.panTo(me.position);
     }
 
