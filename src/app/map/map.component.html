@@ -1,4 +1,5 @@
 <div class="map-page">
+  
   <div id="map"></div>
 
   <app-contacts [contacts]="contacts$ | async"
@@ -6,6 +7,7 @@
                 [show]="showContacts"
                 (centre)="centreMe($event)"></app-contacts>
 
+  <!-- Bottom Bar -->
   <md-toolbar [color]="primary">
     <button md-icon-button aria-label="Centre on me" (click)="centreMe()">
       <md-icon class="md-24">my_location</md-icon>
@@ -22,6 +24,6 @@
     <button md-button aria-label="Invite other people" (click)="addPeople()">
       ADD
     </button>
-  </md-toolbar>
+  </md-toolbar><!-- End Bottom Bar -->
 
 </div>

@@ -13,7 +13,7 @@
   <div *ngIf="show" class="me">
     <md-list-item>
       <div class="contact-row" (click)="centre.emit(me.$key)">
-        <span class="name">{{me.name}}</span>
+        <span class="name">Me</span>
         <span class="fill-space"></span>
         <span class="time"><i>{{formatDate(me.updated)}}</i></span>
       </div>

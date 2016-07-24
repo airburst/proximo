@@ -18,39 +18,3 @@ md-toolbar {
 .fill-space {
   flex: 1 1 auto;
 }
-
-
-/* Pulsate a map marker */
-/*.gmnoprint[title=Me]>img {*/
-.pulse {
-    position: absolute;
-    margin-top: -100/2;
-    margin-left: -100/2;
-    transform: rotateX(55deg);
-}
-.pulse::after {
-    display: block;
-    width: 100;
-    height: 100;
-    content: '';
-    animation: pulsate 1s ease-out;
-    animation-delay: 1.1s;
-    animation-iteration-count: infinite;
-    opacity: 0;
-    border-radius: 50%;
-    box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.7);
-    box-shadow: 0 0 6px 3px rgba(red, 1.0);
-}
-@keyframes pulsate {
-    0% {
-        transform: scale(.1, .1);
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1.2, 1.2);
-        opacity: 0;
-    }
-}
