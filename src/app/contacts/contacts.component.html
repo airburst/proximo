@@ -5,7 +5,7 @@
         <span class="name">{{contact.name}}</span>
         <span class="fill-space"></span>
         <span class="time"><i>{{formatDate(contact.updated)}}</i></span>
-        <span class="label label-success">200m</span>
+        <span class="label label-success">{{distanceTo(contact) | number:'1.0-1'}} mi</span>
       </div>
     </md-list-item>
     <md-divider></md-divider>

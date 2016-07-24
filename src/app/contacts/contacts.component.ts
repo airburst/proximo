@@ -20,6 +20,8 @@ export class ContactsComponent implements OnInit {
 
   constructor() { }
 
+  conversion: number = 1.6142;
+
   @Input() contacts: ILocation[];
   @Input() me: ILocation;
   @Input() show: boolean;
@@ -29,6 +31,10 @@ export class ContactsComponent implements OnInit {
 
   formatDate(dateTime: string): string {
     return moment(dateTime).fromNow();
+  }
+
+  distanceTo(contact: ILocation): number {
+    return this.distanceBetween(this.me.position, contact.position) / this.conversion;
   }
 
   distanceBetween(latLng1: LatLng, latLng2: LatLng): number {
