@@ -12,7 +12,6 @@ import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import {ILocation, Location, LatLng} from '../location';
 import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
-import {EmailService} from '../email.service';
 import {ContactsComponent} from '../contacts/contacts.component';
 import {flatten, uniqueArray} from '../utils';
 
@@ -22,7 +21,7 @@ import {flatten, uniqueArray} from '../utils';
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
     directives: [ROUTER_DIRECTIVES, MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar, ContactsComponent],
-    providers: [MdIconRegistry, LocationsService, LocalstorageService, EmailService]
+    providers: [MdIconRegistry, LocationsService, LocalstorageService]
 })
 export class MapComponent implements OnInit {
 
@@ -49,8 +48,7 @@ export class MapComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private locationsService: LocationsService,
-        private localstorageService: LocalstorageService,
-        private emailService: EmailService
+        private localstorageService: LocalstorageService
     ) {
         this.markers = new Map;
         this.locationId = this.localstorageService.get('proximoLocationId');
@@ -203,11 +201,6 @@ export class MapComponent implements OnInit {
 
     private addPeople($event) {
         this.router.navigate(['../invite/', this.locationId], { relativeTo: this.route });
-        //this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
-            // .subscribe(
-            // data => console.log(data),
-            // err => console.log('Error sending email', err)
-            // );
     }
 
     toggleContacts($event) {

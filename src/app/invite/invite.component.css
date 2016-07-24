@@ -1,0 +1,26 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main {
+    display: flex;
+    height: 100%;
+    flex-grow: 1;
+}
+
+md-card {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+}
+
+md-toolbar {
+    display: flex;
+    flex: 1;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}

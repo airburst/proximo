@@ -59,7 +59,6 @@ const barrels: string[] = [
   'app/shared',
   'app/routes',
   'app/map',
-  'app/nogeocomponent',
   'app/nogeo',
   'app/contacts',
   'app/invite',
