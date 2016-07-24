@@ -16,6 +16,43 @@ import {EmailService} from '../email.service';
 import {ContactsComponent} from '../contacts/contacts.component';
 import {flatten, uniqueArray} from '../utils';
 
+CustomMarker.prototype = new window.google.maps.OverlayView();
+
+function CustomMarker(opts) {
+    this.setValues(opts);
+}
+
+CustomMarker.prototype.draw = function() {
+    var self = this;
+    var div = this.div;
+    if (!div) {
+        div = this.div = $('' +
+            '<div>' +
+            '<div class="shadow"></div>' +
+            '<div class="pulse"></div>' +
+            '<div class="pin-wrap">' +
+            '<div class="pin"></div>' +
+            '</div>' +
+            '</div>' +
+            '')[0];
+        this.pinWrap = this.div.getElementsByClassName('pin-wrap');
+        this.pin = this.div.getElementsByClassName('pin');
+        this.pinShadow = this.div.getElementsByClassName('shadow');
+        div.style.position = 'absolute';
+        div.style.cursor = 'pointer';
+        var panes = this.getPanes();
+        panes.overlayImage.appendChild(div);
+        window.google.maps.event.addDomListener(div, "click", function(event) {
+            window.google.maps.event.trigger(self, "click", event);
+        });
+    }
+    var point = this.getProjection().fromLatLngToDivPixel(this.position);
+    if (point) {
+        div.style.left = point.x + 'px';
+        div.style.top = point.y + 'px';
+    }
+};
+
 @Component({
     moduleId: module.id,
     selector: 'app-map',
@@ -130,7 +167,7 @@ export class MapComponent implements OnInit {
     private displayMarkers(markers: ILocation[]) {
         this.removeAllMarkers();
         markers.forEach((m) => {
-            if (this.containsMyLocationId(m)) { 
+            if (this.containsMyLocationId(m)) {
                 this.addMarker(m);
             }
         });
@@ -163,6 +200,10 @@ export class MapComponent implements OnInit {
             title: marker.name,
             label: marker.name
         });
+        // return new CustomMarker({
+        //     position: marker.position,
+        //     map: this.map
+        // });
     }
 
     private addToMarkersList(id: string, marker: Location) {
@@ -204,8 +245,8 @@ export class MapComponent implements OnInit {
     private addPeople($event) {
         this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
             .subscribe(
-                data => console.log(data),
-                err => console.log('Error sending email', err)
+            data => console.log(data),
+            err => console.log('Error sending email', err)
             );
     }
 
