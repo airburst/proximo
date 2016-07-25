@@ -14,6 +14,7 @@ import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
 import {ContactsComponent} from '../contacts/contacts.component';
 import {flatten, uniqueArray} from '../utils';
+import * as moment from 'moment';
 
 @Component({
     moduleId: module.id,
@@ -108,8 +109,9 @@ export class MapComponent implements OnInit {
     }
 
     filterContacts(locations: ILocation[]): void {
+        // Filter for locations that include me as a contact and were updated in last 24 hours
         let array = locations.filter((l) => {
-            return this.isLinkedToMyLocationId(l);
+            return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
         });
         this.contacts$ = Observable.of(array);
     }
@@ -130,7 +132,7 @@ export class MapComponent implements OnInit {
     private displayMarkers(markers: ILocation[]) {
         this.removeAllMarkers();
         markers.forEach((m) => {
-            if (this.containsMyLocationId(m)) {
+            if (this.containsMyLocationId(m) && this.hasUpdatedInLastDay(m)) {
                 this.addMarker(m);
             }
         });
@@ -146,6 +148,10 @@ export class MapComponent implements OnInit {
 
     private isLinkedToMyLocationId(location: ILocation): boolean {
         return location.contacts && (location.contacts.indexOf(this.locationId) > -1) ? true : false;
+    }
+
+    private hasUpdatedInLastDay(location: ILocation): boolean {
+        return (moment().diff(moment(location.updated), 'days') === 0);
     }
 
     private addMarker(marker: ILocation) {
