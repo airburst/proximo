@@ -45,6 +45,7 @@ export class MapComponent implements OnInit {
     markers: any;
     bounds: any;
     showContacts: boolean = false;
+    autoScale: boolean = true;
 
     constructor(
         private router: Router,
@@ -97,7 +98,6 @@ export class MapComponent implements OnInit {
 
     ngOnInit() {
         this.me$ = this.myLocation();
-
         this.resetBounds();
         this.show();
     }
@@ -136,6 +136,7 @@ export class MapComponent implements OnInit {
                 this.addMarker(m);
             }
         });
+        if (this.autoScale) { this.scaleToFit(); this.autoScale = false; }
     }
 
     private containsMyLocationId(location: ILocation): boolean {
@@ -157,7 +158,6 @@ export class MapComponent implements OnInit {
     private addMarker(marker: ILocation) {
         let mapMarker = this.makeGoogleMarker(marker);
         this.addToMarkersList(marker.$key, mapMarker);
-        this.scaleToFitNewMarker(mapMarker);
     }
 
     private makeGoogleMarker(marker: ILocation): any {
@@ -202,7 +202,7 @@ export class MapComponent implements OnInit {
         this.map.panTo(me.position);
     }
 
-    private scaleToFit($event) {
+    private scaleToFit() {
         this.resetBounds();
         this.markers.forEach((m) => { this.scaleToFitNewMarker(m); });
     }
