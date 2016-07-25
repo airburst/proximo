@@ -42,9 +42,11 @@ export class GeolocationService {
   // TODO: use callback or observable    
   public watch(callback: Function): void {
     if (!this.hasWatch) {
-      this.watchId = navigator.geolocation.watchPosition(position => {
-        callback({ lat: position.coords.latitude, lon: position.coords.longitude });
-      });
+      this.watchId = navigator.geolocation.watchPosition(
+        position => { callback({ lat: position.coords.latitude, lng: position.coords.longitude }); },
+        error => { console.log('Geolocation error', error); },
+        this.options
+      );
       this.hasWatch = true;
     }
   }

@@ -10,6 +10,7 @@ import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
 import { MdToolbar } from '@angular2-material/toolbar';
 import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import {ILocation, Location, LatLng} from '../location';
+import {GeolocationService} from '../geolocation.service';
 import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
 import {ContactsComponent} from '../contacts/contacts.component';
@@ -22,7 +23,7 @@ import * as moment from 'moment';
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
     directives: [ROUTER_DIRECTIVES, MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar, ContactsComponent],
-    providers: [MdIconRegistry, LocationsService, LocalstorageService]
+    providers: [MdIconRegistry, LocationsService, LocalstorageService, GeolocationService]
 })
 export class MapComponent implements OnInit {
 
@@ -51,7 +52,8 @@ export class MapComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private locationsService: LocationsService,
-        private localstorageService: LocalstorageService
+        private localstorageService: LocalstorageService,
+        private geoService: GeolocationService
     ) {
         this.markers = new Map;
         this.locationId = this.localstorageService.get('proximoLocationId');
@@ -100,6 +102,7 @@ export class MapComponent implements OnInit {
         this.me$ = this.myLocation();
         this.resetBounds();
         this.show();
+        this.geoService.watch(this.updateMyLocation.bind(this));
     }
 
     myLocation(): Observable<ILocation> {
@@ -114,6 +117,10 @@ export class MapComponent implements OnInit {
             return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
         });
         this.contacts$ = Observable.of(array);
+    }
+
+    updateMyLocation(latLng: LatLng) {
+        this.locationsService.updateByKey(this.locationId, { position: latLng, updated: new Date().toISOString() });
     }
 
     private resetBounds() {
