@@ -31,6 +31,7 @@ export class MapComponent implements OnInit {
     contacts$: Observable<ILocation[]>;
     me$: Observable<ILocation>;
     joinId: string = undefined;
+    joinName: string = undefined;
     options: any = { zoom: 12 };
     icon: any = {
         path: window.google.maps.SymbolPath.CIRCLE,
@@ -67,6 +68,7 @@ export class MapComponent implements OnInit {
     setJoinIdFromUrl() {
         this.route.params.subscribe(params => {
             if (params['id']) { this.joinId = params['id']; }
+            // if (params['name']) { this.locationsService.updateByKey(this.locationId, { name: params['name'] }); }
         });
     }
 

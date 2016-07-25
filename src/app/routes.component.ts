@@ -8,6 +8,7 @@ const routes: RouterConfig = [
   //{ path: '', redirectTo: 'map', terminal: true },
   { path: '', component: MapComponent },
   { path: 'join/:id', component: MapComponent },
+  { path: 'join/:id/:name', component: MapComponent },
   { path: 'invite/:id', component: InviteComponent },
   { path: 'nogeo', component: NogeoComponent }
 ];

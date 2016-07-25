@@ -1,4 +1,4 @@
-const url = 'http://proximate.fairhursts.net/group/';
+const url = 'http://proximate.fairhursts.net/join/';
 const getName = (name: string) => {
     return (name) ? name.split(' ')[0] : '';
 }
