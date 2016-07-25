@@ -11,12 +11,12 @@ export class EmailService {
 
   constructor(private http: Http) { }
 
-  sendInvitation(to: string, id: string): Observable<any> {
+  sendInvitation(email: string, id: string, name?: string): Observable<any> {
     return this.send(
-      to,
+      email,
       EmailTemplates.invitation.subject,
-      EmailTemplates.invitation.text(id),
-      EmailTemplates.invitation.html(id)
+      EmailTemplates.invitation.text(id, name),
+      EmailTemplates.invitation.html(id, name)
     );
   }
 

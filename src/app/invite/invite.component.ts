@@ -45,10 +45,6 @@ export class InviteComponent implements OnInit {
     });
     this.firstname = this.inviteForm.controls['firstname'];
     this.email = this.inviteForm.controls['email'];
-    // this.inviteForm.valueChanges.subscribe((v) => {
-    //   console.log(v);
-    //   console.log(this.inviteForm.valid);
-    // });
   }
 
   ngOnInit() {
@@ -58,12 +54,11 @@ export class InviteComponent implements OnInit {
   }
 
   onSubmit(form: any): void {
-    console.log('Sending an email to', form.email, 'with id', this.joinId, 'and name', form.firstname);
-    //this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
-    // .subscribe(
-    // data => console.log(data),
-    // err => console.log('Error sending email', err)
-    // );
+    this.emailService.sendInvitation(form.email, this.joinId, form.firstname)
+      .subscribe(
+        data => this.router.navigate(['/'], { relativeTo: this.route }),
+        err => console.log('Error sending email', err)
+      );
   }
 
   back($event) {
