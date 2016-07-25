@@ -10,10 +10,13 @@ import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import {
   FORM_DIRECTIVES,
   REACTIVE_FORM_DIRECTIVES,
+  Validators,
   FormBuilder,
-  FormGroup
+  FormGroup,
+  AbstractControl
 } from '@angular/forms';
 import {EmailService} from '../email.service';
+import {validateEmail} from '../validators';
 
 @Component({
   moduleId: module.id,
@@ -26,29 +29,36 @@ import {EmailService} from '../email.service';
 export class InviteComponent implements OnInit {
 
   joinId: string = null;
-  myForm: FormGroup;
+  inviteForm: FormGroup;
+  firstname: AbstractControl;
+  email: AbstractControl;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private emailService: EmailService,
-    private fb: FormBuilder
+    fb: FormBuilder
   ) {
-    this.route.params.subscribe(params => {
-      if (params['id']) { this.joinId = params['id']; }
+    this.inviteForm = fb.group({
+      firstname: ['', Validators.required],
+      email: ['', [Validators.required, validateEmail]]
     });
-
-    this.myForm = fb.group({
-      'firstname': ['ABC123'],
-      'email': ['']
-    });
+    this.firstname = this.inviteForm.controls['firstname'];
+    this.email = this.inviteForm.controls['email'];
+    // this.inviteForm.valueChanges.subscribe((v) => {
+    //   console.log(v);
+    //   console.log(this.inviteForm.valid);
+    // });
   }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      if (params['id']) { this.joinId = params['id']; }
+    });
   }
 
   onSubmit(form: any): void {
-    console.log('you submitted value:', form);
+    console.log('Sending an email to', form.email, 'with id', this.joinId, 'and name', form.firstname);
     //this.emailService.sendInvitation('mark.fairhurst@outlook.com', this.locationId)
     // .subscribe(
     // data => console.log(data),

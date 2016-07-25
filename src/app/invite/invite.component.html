@@ -1,25 +1,32 @@
 <div class="page">
-  <div class="main">
-    <md-card>
-      <h2>Invite New ProxiMate</h2>
-      <p class="message">
-        Please type in the name and email address for the person that you want to invite.  We will send them a link.
+
+  <md-toolbar color="primary">
+    <h2>Invite New ProxiMate</h2>
+  </md-toolbar>
+
+  <div class="main container">
+    <div class="form-container">
+
+      <p class="intro">
+        Please type in the name and email address for the person that you want to invite. We will send them a link.
       </p>
 
-      <form [formGroup]="myForm" (ngSubmit)="onSubmit(myForm.value)">
+      <form [formGroup]="inviteForm" (ngSubmit)="onSubmit(inviteForm.value)" class="form">
 
-        <div class="field">
-          <md-input type="text" id="nameInput" [formControl]="myForm.controls['firstname']"></md-input>
-          <md-hint>Name *</md-hint>
+        <div class="form-group" [class.has-error]="!firstname.valid && firstname.touched" [class.has-success]="firstname.valid && firstname.touched">
+          <label for="nameInput">Name *</label>
+          <input class="form-control input-lg" type="text" id="nameInput" [formControl]="firstname" />
+          <div *ngIf="firstname.hasError('required') && firstname.touched" class="error message">Please enter a name</div>
         </div>
 
-        <div class="field">
-          <md-input type="email" id="emailInput" [formControl]="myForm.controls['email']"></md-input>
-          <md-hint>Email Address *</md-hint>
+        <div class="form-group" [class.has-error]="!email.valid && email.touched" [class.has-success]="email.valid && email.touched">
+          <label for="emailInput">Email Address *</label>
+          <input class="form-control input-lg" type="email" id="emailInput" [formControl]="email" />
+          <div *ngIf="(email.hasError('required') || (email.hasError('validateEmail'))) && email.touched" class="error message">Please enter a valid email address</div>
         </div>
 
       </form>
-    </md-card>
+    </div>
   </div>
 
   <!-- Bottom Bar -->
@@ -28,7 +35,9 @@
     <button md-button aria-label="Back to map" (click)="back()">
       BACK
     </button>
-    <button md-raised-button type="submit" color="primary" aria-label="Send invitation" (click)="onSubmit(myForm.value)">
+    <button md-raised-button type="submit" color="primary" aria-label="Send invitation" 
+      *ngIf="inviteForm.valid"
+      (click)="onSubmit(inviteForm.value)">
       SEND
     </button>
   </md-toolbar>

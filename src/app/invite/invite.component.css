@@ -10,15 +10,30 @@
     flex-grow: 1;
 }
 
-md-card {
-    display: flex;
+.form-container {
     flex-grow: 1;
-    width: 100%;
 }
 
 md-toolbar {
     display: flex;
     flex: 1;
+}
+
+.intro,
+label,
+input {
+    font-size: 2rem;
+    font-family: 'Roboto', 'Arial', 'Helvetica';
+}
+
+.intro {
+    margin: 4rem 0;
+}
+
+.error.message {
+    font-family: 'Roboto', 'Arial', 'Helvetica';
+    padding-top: 8px;
+    color: red;
 }
 
 .fill-space {
