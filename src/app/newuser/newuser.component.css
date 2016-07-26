@@ -1,0 +1,53 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main {
+    display: flex;
+    height: 100%;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.form-container,
+.info-container {
+    flex-grow: 1;
+}
+
+md-toolbar {
+    display: flex;
+    flex: 1;
+}
+
+.intro,
+label,
+input {
+    font-size: 2rem;
+    font-family: 'Roboto', 'Arial', 'Helvetica';
+}
+
+.info {
+    font-size: 1.4rem;
+    font-family: 'Roboto', 'Arial', 'Helvetica';
+    margin: 0 0 1rem 0;
+}
+
+.info-heading {
+    margin-top: 4rem;
+}
+
+.intro {
+    margin: 4rem 0;
+}
+
+.error.message {
+    font-family: 'Roboto', 'Arial', 'Helvetica';
+    padding-top: 8px;
+    color: red;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}

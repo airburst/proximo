@@ -34,6 +34,7 @@ export class MapComponent implements OnInit {
     me$: Observable<ILocation>;
     joinId: string = undefined;
     joinName: string = undefined;
+    newUser: boolean = false;
     options: any = { zoom: 12 };
     icon: any = {
         path: window.google.maps.SymbolPath.CIRCLE,
@@ -103,12 +104,23 @@ export class MapComponent implements OnInit {
         this.resetBounds();
         this.show();
         this.geoService.watch(this.updateMyLocation.bind(this));
+
     }
 
     myLocation(): Observable<ILocation> {
         return this.locations$
             .flatMap((data) => data)
             .filter(l => l.$key === this.locationId);
+    }
+
+    testForNewUser() {
+        this.me$.subscribe(me => { 
+            if (me.name === 'Me') { 
+                this.newUser = true;
+                console.log('New user', this.joinId);
+                //this.router.navigate(['../invite/', this.locationId], { relativeTo: this.route });
+            }
+        });
     }
 
     filterContacts(locations: ILocation[]): void {

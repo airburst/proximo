@@ -36,7 +36,7 @@
 <div *ngIf="showConfirmDialog" class="modal-cover"></div>
 <div class="confirm-dialog" [ngClass]="{show: showConfirmDialog}">
   <md-card>
-    <p class="intro">Do you want to stop following {{selectedContact.name}}?</p>
+    <p class="intro">Do you want to stop sharing your position with {{selectedContact.name}}?</p>
     <button md-raised-button color="primary" aria-label="Invite other people" (click)="removeContact(selectedContact)">
       YES
     </button>

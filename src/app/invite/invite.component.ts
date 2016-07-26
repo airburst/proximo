@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
@@ -26,7 +26,7 @@ import {validateEmail} from '../validators';
   directives: [ROUTER_DIRECTIVES, MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MD_INPUT_DIRECTIVES, MdIcon, MdToolbar, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   providers: [MdIconRegistry, EmailService, FormBuilder]
 })
-export class InviteComponent implements OnInit {
+export class InviteComponent implements OnInit, AfterViewInit {
 
   joinId: string = null;
   inviteForm: FormGroup;
@@ -51,6 +51,10 @@ export class InviteComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params['id']) { this.joinId = params['id']; }
     });
+  }
+
+  ngAfterViewInit() {
+    document.getElementById('nameInput').focus();
   }
 
   onSubmit(form: any): void {

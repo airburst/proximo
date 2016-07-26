@@ -62,6 +62,7 @@ const barrels: string[] = [
   'app/nogeo',
   'app/contacts',
   'app/invite',
+  'app/newuser',
   /** @cli-barrel */
 ];
 

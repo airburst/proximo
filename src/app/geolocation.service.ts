@@ -15,6 +15,7 @@ export class GeolocationService {
     this.options = {
       timeout: this.timeout * 1000,
       maximumAge: this.maxAge * 60 * 1000,
+      enableHighAccuracy: false
     };
   }
 
