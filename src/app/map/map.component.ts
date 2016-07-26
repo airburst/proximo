@@ -14,7 +14,7 @@ import {GeolocationService} from '../geolocation.service';
 import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
 import {ContactsComponent} from '../contacts/contacts.component';
-import {flatten, uniqueArray} from '../utils';
+import {flatten, uniqueArray, removeItemFromArray} from '../utils';
 import * as moment from 'moment';
 
 @Component({
@@ -216,6 +216,18 @@ export class MapComponent implements OnInit {
 
     private addPeople($event) {
         this.router.navigate(['../invite/', this.locationId], { relativeTo: this.route });
+    }
+
+    // Unlink contact (both ways)
+    private unlinkContact(contact: ILocation) {
+        let timeStamp = new Date().toISOString();
+        removeItemFromArray(contact.contacts, this.locationId);
+        this.locationsService.updateByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
+        this.me$.subscribe((me) => { 
+            removeItemFromArray(me.contacts, contact.$key);
+            this.autoScale = true;
+            this.locationsService.updateByKey(me.$key, { contacts: me.contacts, updated: timeStamp });
+        });
     }
 
     toggleContacts($event) {

@@ -35,3 +35,7 @@ export const uniqueArray = (arrArg) => {
         return arr.indexOf(elem) == pos;
     });
 };
+
+export const removeItemFromArray = (array: any[], item: any): void => {
+    array.splice(array.indexOf(item), 1);
+}

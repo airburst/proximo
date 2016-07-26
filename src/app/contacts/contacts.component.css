@@ -1,6 +1,13 @@
 .contacts-list-container,
 .contacts-list  {
-    max-height: 153px;  /* 3 items plus 8px top padding plus 1px divider */
+    max-height: 145px;  /* 3 items plus 8px top padding plus 1px divider */
+}
+
+md-list {
+    padding-top: 0;
+    box-shadow: 2px 5px 5px 8px rgba(0,0,0,.10),
+                2px 5px 10px 1px rgba(0,0,0,.098),
+                2px 3px 14px 2px rgba(0,0,0,.084);
 }
 
 .me {
@@ -9,12 +16,14 @@
 
 .contacts-list {
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .contact-row {
     display: flex;
     flex-direction: row;
     width: 100%;
+    align-items: center;
 }
 
 .fill-space {
@@ -31,7 +40,7 @@
     background-color: #5cb85c;
 }
 .label {
-    display: inline-block;
+    display: flex;
     padding: .25em .4em;
     font-size: 75%;
     font-weight: 700;
@@ -42,4 +51,28 @@
     vertical-align: baseline;
     border-radius: .25rem;
     margin-left: 1rem;
+    min-width: 5rem;
+    height: 2rem;
+    align-items: center;
+}
+
+.remove {
+    margin-left: 16px;
+    margin-right: -64px;
+    display: flex;
+    padding: 12px;
+    align-items: center;
+    background: red;
+    color: white;
+    height: 100%;
+    width: 48px;
+}
+
+.remove.show {
+    margin-right: -16px;
+}
+
+.remove,
+.remove.show {
+    transition: all 0.1s ease-in-out;
 }

@@ -4,7 +4,8 @@
   <app-contacts [contacts]="contacts$ | async"
                 [me]="me$ | async"
                 [show]="showContacts"
-                (centre)="centreMe($event)"></app-contacts>
+                (centre)="centreMe($event)"
+                (remove)="unlinkContact($event)"></app-contacts>
 
   <!-- Bottom Bar -->
   <md-toolbar [color]="primary">

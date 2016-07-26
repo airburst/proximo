@@ -1,16 +1,23 @@
 <md-list>
+
   <div class="contacts-list">
     <div *ngIf="show" class="contacts-list-container">
       <md-list-item *ngFor="let contact of contacts">
-        <div class="contact-row" (click)="centre.emit(contact.$key)">
+        <div class="contact-row" (click)="centre.emit(contact.$key); clicked(contact)">
           <span class="name">{{contact.name}}</span>
           <span class="fill-space"></span>
           <span class="time"><i>{{formatDate(contact.updated)}}</i></span>
           <span class="label label-success">{{distanceTo(contact) | number:'1.0-1'}} mi</span>
         </div>
+        <div class="remove" 
+          [ngClass]="{show: contact.clicked}"
+          (click)="removeContact(contact)">
+          <md-icon class="md-24" color="red">clear</md-icon>
+        </div>
       </md-list-item>
     </div>
   </div>
+
   <div *ngIf="show" class="me">
     <md-divider></md-divider>
     <md-list-item>
@@ -22,4 +29,5 @@
     </md-list-item>
     <md-divider></md-divider>
   </div>
+
 </md-list>
