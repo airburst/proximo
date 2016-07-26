@@ -204,7 +204,6 @@ export class MapComponent implements OnInit {
             this.bounds.extend(extendPoint1);
             this.bounds.extend(extendPoint2);
         }
-        console.log('map', this.map)            //
         this.map.fitBounds(this.bounds);
     }
 
