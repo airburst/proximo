@@ -61,11 +61,12 @@ export class MapComponent implements OnInit {
         this.setJoinIdFromUrl();
         this.locations$ = locationsService.locations$;
         this.locations$
-            .delay(500)
+            .delay(1000)
             .subscribe((l) => {
                 if (this.locationId === null) { this.locationId = this.localstorageService.get('proximoLocationId'); }
                 this.filterContacts(l);
-                if (this.joinId !== undefined) { this.linkUsers(this.joinId, l); }
+                if (this.newUser) { this.router.navigate(['../newuser/', (this.joinId) ? this.joinId : this.locationId], { relativeTo: this.route }); }
+                if ((this.joinId !== undefined) && (this.joinId !== this.locationId)) { this.linkUsers(this.joinId, l); }
                 else { this.displayMarkers(l); }
             });
     }
@@ -73,7 +74,9 @@ export class MapComponent implements OnInit {
     setJoinIdFromUrl() {
         this.route.params.subscribe(params => {
             if (params['id']) { this.joinId = params['id']; }
-            // if (params['name']) { this.locationsService.updateByKey(this.locationId, { name: params['name'] }); }
+            if (params['firstname']) { this.locationsService.updateByKey(this.locationId, { name: params['firstname'] }); }
+            if (params['colour']) { this.locationsService.updateByKey(this.locationId, { color: params['colour'] }); }
+            this.router.navigate(['/'], { relativeTo: this.route });
         });
     }
 
@@ -100,11 +103,10 @@ export class MapComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.me$ = this.myLocation();
         this.resetBounds();
         this.show();
-        this.geoService.watch(this.updateMyLocation.bind(this));
-
+        this.me$ = this.myLocation();
+        //this.geoService.watch(this.updateMyLocation.bind(this));
     }
 
     myLocation(): Observable<ILocation> {
@@ -113,22 +115,17 @@ export class MapComponent implements OnInit {
             .filter(l => l.$key === this.locationId);
     }
 
-    testForNewUser() {
-        this.me$.subscribe(me => { 
-            if (me.name === 'Me') { 
-                this.newUser = true;
-                console.log('New user', this.joinId);
-                //this.router.navigate(['../invite/', this.locationId], { relativeTo: this.route });
-            }
-        });
-    }
-
     filterContacts(locations: ILocation[]): void {
         // Filter for locations that include me as a contact and were updated in last 24 hours
         let array = locations.filter((l) => {
+            this.testForNewUser(l);
             return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
         });
         this.contacts$ = Observable.of(array);
+    }
+
+    testForNewUser(location: ILocation): void {
+        if ((location.$key === this.locationId) && (location.name === 'Me')) { this.newUser = true; }
     }
 
     updateMyLocation(latLng: LatLng) {
@@ -207,6 +204,7 @@ export class MapComponent implements OnInit {
             this.bounds.extend(extendPoint1);
             this.bounds.extend(extendPoint2);
         }
+        console.log('map', this.map)            //
         this.map.fitBounds(this.bounds);
     }
 

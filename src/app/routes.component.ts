@@ -10,8 +10,10 @@ const routes: RouterConfig = [
   { path: '', component: MapComponent },
   { path: 'join/:id', component: MapComponent },
   { path: 'join/:id/:name', component: MapComponent },
+  { path: 'join/id/:name/:colour', component: MapComponent },
   { path: 'invite/:id', component: InviteComponent },
   { path: 'nogeo', component: NogeoComponent },
+  { path: 'newuser', component: NewuserComponent },
   { path: 'newuser/:id', component: NewuserComponent }
 ];
 

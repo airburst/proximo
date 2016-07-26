@@ -73,8 +73,11 @@ export class NewuserComponent implements OnInit {
   }
 
   join(form: any): void {
-    console.log(form)           //
-    //this.router.navigate(['/'], { relativeTo: this.route });
+    this.router.navigate([this.makeUrl(), form], { relativeTo: this.route });
+  }
+
+  makeUrl(): string {
+    return '/join/' + this.joinId + '/';
   }
 
 }
