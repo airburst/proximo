@@ -1,5 +1,5 @@
 <md-list>
-
+  <!-- My contacts list -->
   <div class="contacts-list">
     <div *ngIf="show" class="contacts-list-container">
       <md-list-item *ngFor="let contact of contacts">
@@ -9,15 +9,15 @@
           <span class="time"><i>{{formatDate(contact.updated)}}</i></span>
           <span class="label label-success">{{distanceTo(contact) | number:'1.0-1'}} mi</span>
         </div>
-        <div class="remove" 
-          [ngClass]="{show: contact.clicked}"
-          (click)="removeContact(contact)">
-          <md-icon class="md-24" color="red">clear</md-icon>
+        <div class="remove" [ngClass]="{show: contact.clicked}" (click)="openConfirmDialog(contact)">
+          <md-icon class="md-24">clear</md-icon>
         </div>
       </md-list-item>
     </div>
   </div>
+  <!-- End My contacts list -->
 
+  <!-- My details -->
   <div *ngIf="show" class="me">
     <md-divider></md-divider>
     <md-list-item>
@@ -29,5 +29,19 @@
     </md-list-item>
     <md-divider></md-divider>
   </div>
-
+  <!-- End My details -->
 </md-list>
+
+<!-- Confirm delete contact -->
+<div *ngIf="showConfirmDialog" class="modal-cover"></div>
+<div class="confirm-dialog" [ngClass]="{show: showConfirmDialog}">
+  <md-card>
+    <p class="intro">Do you want to stop following {{selectedContact.name}}?</p>
+    <button md-raised-button color="primary" aria-label="Invite other people" (click)="removeContact(selectedContact)">
+      YES
+    </button>
+    <button md-raised-button aria-label="Invite other people" (click)="closeConfirmDialog()">
+      NO
+    </button>
+  </md-card>
+</div>

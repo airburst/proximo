@@ -5,7 +5,7 @@ import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
 import { MdToolbar } from '@angular2-material/toolbar';
 import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
-import { ILocation, LatLng } from '../location';
+import { Location, ILocation, LatLng } from '../location';
 import * as moment from 'moment';
 
 interface Contact extends ILocation {
@@ -23,9 +23,13 @@ interface Contact extends ILocation {
 })
 export class ContactsComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    this.emptySelectedContact();
+  }
 
   conversion: number = 1.6142;
+  showConfirmDialog: boolean = false;
+  selectedContact: ILocation;
 
   @Input() contacts: ILocation[];
   @Input() me: ILocation;
@@ -67,8 +71,23 @@ export class ContactsComponent implements OnInit {
     setTimeout(() => contact.clicked = false, 2000);
   }
 
+  openConfirmDialog(contact: ILocation) {
+    this.selectedContact = contact;
+    this.showConfirmDialog = true;
+  }
+
+  closeConfirmDialog() {
+    this.showConfirmDialog = false;
+    this.emptySelectedContact()
+  }
+
   removeContact(contact: ILocation) {
     this.remove.emit(contact);
+    this.closeConfirmDialog();
+  }
+
+  emptySelectedContact() {
+    this.selectedContact = new Location({ lat: 0, lng: 0 });
   }
 
 }

@@ -39,3 +39,5 @@ export const uniqueArray = (arrArg) => {
 export const removeItemFromArray = (array: any[], item: any): void => {
     array.splice(array.indexOf(item), 1);
 }
+
+export const timeStamp = new Date().toISOString();

@@ -14,7 +14,7 @@ import {GeolocationService} from '../geolocation.service';
 import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
 import {ContactsComponent} from '../contacts/contacts.component';
-import {flatten, uniqueArray, removeItemFromArray} from '../utils';
+import {timeStamp, uniqueArray, removeItemFromArray} from '../utils';
 import * as moment from 'moment';
 
 @Component({
@@ -89,13 +89,13 @@ export class MapComponent implements OnInit {
     linkMeToThem(theirId: string, myLocation: ILocation) {
         let c: string[] = [theirId];
         if (myLocation.contacts) { c = uniqueArray(c.concat(myLocation.contacts)); }
-        this.locationsService.updateByKey(this.locationId, { contacts: c, updated: new Date().toISOString() });
+        this.locationsService.updateByKey(this.locationId, { contacts: c, updated: timeStamp });
     }
 
     linkThemToMe(theirLocation: ILocation) {
         let c: string[] = [this.locationId];
         if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
-        this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: new Date().toISOString() });
+        this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: timeStamp });
     }
 
     ngOnInit() {
@@ -120,7 +120,7 @@ export class MapComponent implements OnInit {
     }
 
     updateMyLocation(latLng: LatLng) {
-        this.locationsService.updateByKey(this.locationId, { position: latLng, updated: new Date().toISOString() });
+        this.locationsService.updateByKey(this.locationId, { position: latLng, updated: timeStamp });
     }
 
     private resetBounds() {
@@ -220,7 +220,6 @@ export class MapComponent implements OnInit {
 
     // Unlink contact (both ways)
     private unlinkContact(contact: ILocation) {
-        let timeStamp = new Date().toISOString();
         removeItemFromArray(contact.contacts, this.locationId);
         this.locationsService.updateByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
         this.me$.subscribe((me) => { 
