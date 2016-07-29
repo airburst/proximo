@@ -10,7 +10,8 @@ const map: any = {
   '@angular2-material': 'vendor/@angular2-material',
   'firebase': 'vendor/firebase/firebase.js',
   'angularfire2': 'vendor/angularfire2',
-  'moment': 'vendor/moment/moment.js'
+  'moment': 'vendor/moment/moment.js',
+  '@ngrx': 'vendor/@ngrx'
 };
 
 /** User packages configuration. */
@@ -18,6 +19,14 @@ const packages: any = {
   angularfire2: {
     defaultExtension: 'js',
     main: 'angularfire2.js'
+  },
+  '@ngrx/core': {
+    main: 'index.js',
+    format: 'cjs'
+  },
+  '@ngrx/store': {
+    main: 'index.js',
+    format: 'cjs'
   }
 };
 
@@ -53,6 +62,7 @@ const barrels: string[] = [
 
   // Thirdparty barrels.
   'rxjs',
+  '@ngrx',
 
   // App specific barrels.
   'app',
@@ -79,7 +89,8 @@ System.config({
   map: {
     '@angular': 'vendor/@angular',
     'rxjs': 'vendor/rxjs',
-    'main': 'main.js'
+    'main': 'main.js',
+    '@ngrx': 'vendor/@ngrx'
   },
   packages: cliSystemConfigPackages
 });

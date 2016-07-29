@@ -5,12 +5,15 @@ import { provideForms } from '@angular/forms';
 import { FIREBASE_PROVIDERS, defaultFirebase } from 'angularfire2';
 import { AppComponent, environment } from './app/';
 import { APP_ROUTER_PROVIDERS } from './app/routes.component';
+import { provideStore } from '@ngrx/store';
+import { settingsReducer } from './app/reducers/settings';
 
 if (environment.production) {
   enableProdMode();
 }
 
 bootstrap(AppComponent, [
+  provideStore({ settings: settingsReducer }),
   HTTP_PROVIDERS,
   APP_ROUTER_PROVIDERS,
   provideForms,

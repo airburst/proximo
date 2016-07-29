@@ -21,7 +21,7 @@ export class Location implements ILocation {
     contacts: string[];
     updated: string;
 
-    constructor(latLng: LatLng, name: string = '', color: string = 'red') {
+    constructor(latLng: LatLng, name: string = 'Me', color: string = 'blue') {
         this.name = name;
         this.position = latLng;
         this.color = color;

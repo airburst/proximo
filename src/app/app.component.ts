@@ -1,70 +1,94 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
-import {GeolocationService} from './geolocation.service';
-import {LocalstorageService} from './localstorage.service';
-import {LocationsService} from './locations.service';
-import {Location, LatLng} from './location';
-import {MapComponent} from './map/map.component';
-import {MockPath} from './mock';
+import { Store } from '@ngrx/store';
+import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, TOGGLE_CONTACTS_PANEL, ISettings } from './reducers/settings';
+import { GeolocationService } from './geolocation.service';
+import { LocalstorageService } from './localstorage.service';
+import { LocationsService } from './locations.service';
+import { ILocation, Location, LatLng } from './location';
+import { timeStamp } from './utils';
+
+interface AppState {
+  settings: ISettings;
+}
 
 @Component({
   moduleId: module.id,
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [ROUTER_DIRECTIVES, MapComponent],
+  directives: [ROUTER_DIRECTIVES],
   providers: [GeolocationService, LocalstorageService, LocationsService]
 })
 export class AppComponent implements OnInit {
 
-  locationId: string;
+  appSettings: Observable<any>;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private localstorageService: LocalstorageService,
     private geolocationService: GeolocationService,
-    private locationsService: LocationsService
-  ) { }
+    private locationsService: LocationsService,
+    public store: Store<AppState>
+  ) {
+    this.appSettings = store.select('settings');
+
+    store.subscribe((s) => console.log(s))
+  }
 
   ngOnInit() {
     this.initialiseData();
   }
 
   initialiseData() {
-    this.locationId = this.localstorageService.get('proximoLocationId');
-    this.getPosition();
+    let id = this.getLocalId();
+    if (id) { this.storeLocationId(id); }
+    this.getGeoPosition(id);    // Can be null
   }
 
-  getPosition() {
+  getLocalId(): string {
+    return this.localstorageService.get('proximoLocationId');
+  }
+
+  getGeoPosition(locationId: string) {
+    console.log('local id', locationId)             //
     this.geolocationService.getLocation()
-      .then((position: any) => { this.setLocation(position); })
+      .then((position: any) => { this.setLocation(position, locationId); })
       .catch((error: any) => {
         this.router.navigate(['./nogeo'], { relativeTo: this.route });
       });
   }
 
-  setLocation(position: any) {
-    let pos = { lat: position.latitude, lng: position.longitude },
-      location = new Location(pos, 'Me', 'blue'); //TODO: capture name and colour from form
-    if (this.locationId === null) { 
-      this.addLocation(location); 
+  setLocation(position: any, locationId: string) {
+    let location = new Location({ lat: position.latitude, lng: position.longitude });
+    location.$key = locationId;
+    this.addOrUpdateLocationInDatabase(location);
+  }
+
+  addOrUpdateLocationInDatabase(location: ILocation) {
+    if (location.$key === null) {
+      console.log('Adding new location')        //
+      this.addLocation(location);
     } else {
-      this.updateLocation(this.locationId, pos);  //NOTE: this can create a new location with just a position
+        console.log('Updating location', location.$key)      //
+      this.updateLocation(location);
     }
   }
 
-  addLocation(location: Location) {
+  addLocation(location: ILocation) {
     this.locationsService.add(location)
-      .then((v) => {
-        this.locationId = v.key;
-        this.localstorageService.set('proximoLocationId', this.locationId);
-      });
+      .then((v) => { this.storeLocationId(v.key) })
   }
 
-  updateLocation(id: string, position: LatLng) {
-    this.locationsService.updateByKey(id, { position: position, updated: new Date().toISOString() });
+  updateLocation(location: ILocation) {
+    this.locationsService.update(location, { position: location.position, updated: timeStamp });
+  }
+
+  storeLocationId(id) {
+    this.store.dispatch({ type: SET_LOCATION_ID, payload: id });
+    this.localstorageService.set('proximoLocationId', id);
   }
 
 }
