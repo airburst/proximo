@@ -1,8 +1,7 @@
 <div class="page">
   <div id="map"></div>
 
-  <app-contacts [contacts]="contacts$ | async"
-                [me]="me$ | async"
+  <app-contacts [settings]="app | async"
                 [show]="showContacts"
                 (centre)="centreMe($event)"
                 (remove)="unlinkContact($event)"></app-contacts>

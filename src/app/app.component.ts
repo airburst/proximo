@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, TOGGLE_CONTACTS_PANEL, ISettings } from './reducers/settings';
+import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, SET_CONTACTS, UPDATE_SETTINGS, ISettings } from './reducers/settings';
 import { GeolocationService } from './geolocation.service';
 import { LocalstorageService } from './localstorage.service';
 import { LocationsService } from './locations.service';
 import { ILocation, Location, LatLng } from './location';
 import { timeStamp } from './utils';
+import * as moment from 'moment';
 
-interface AppState {
+export interface AppState {
   settings: ISettings;
 }
 
@@ -23,7 +24,10 @@ interface AppState {
 })
 export class AppComponent implements OnInit {
 
+  locationKey: string = 'proximateLocationId';
+  locationId: string;
   appSettings: Observable<any>;
+  locations$: Observable<ILocation[]>;
 
   constructor(
     private router: Router,
@@ -34,61 +38,105 @@ export class AppComponent implements OnInit {
     public store: Store<AppState>
   ) {
     this.appSettings = store.select('settings');
-
-    store.subscribe((s) => console.log(s))
+    this.locations$ = locationsService.locations$;
   }
 
   ngOnInit() {
-    this.initialiseData();
-  }
-
-  initialiseData() {
     let id = this.getLocalId();
     if (id) { this.storeLocationId(id); }
-    this.getGeoPosition(id);    // Can be null
+    this.getGeoPosition(id);
   }
 
   getLocalId(): string {
-    return this.localstorageService.get('proximoLocationId');
+    return this.localstorageService.get(this.locationKey);
   }
 
   getGeoPosition(locationId: string) {
-    console.log('local id', locationId)             //
     this.geolocationService.getLocation()
       .then((position: any) => { this.setLocation(position, locationId); })
       .catch((error: any) => {
-        this.router.navigate(['./nogeo'], { relativeTo: this.route });
+        console.log('Geo error', error)                                             //
+        //this.router.navigate(['./nogeo'], { relativeTo: this.route });
       });
   }
 
   setLocation(position: any, locationId: string) {
     let location = new Location({ lat: position.latitude, lng: position.longitude });
-    location.$key = locationId;
-    this.addOrUpdateLocationInDatabase(location);
+    this.addOrUpdateLocationInDatabase(location, locationId);
   }
 
-  addOrUpdateLocationInDatabase(location: ILocation) {
-    if (location.$key === null) {
-      console.log('Adding new location')        //
+  addOrUpdateLocationInDatabase(location: ILocation, locationId: string) {
+    if (locationId === null) {
       this.addLocation(location);
     } else {
-        console.log('Updating location', location.$key)      //
+      location.$key = locationId;
       this.updateLocation(location);
     }
   }
 
   addLocation(location: ILocation) {
     this.locationsService.add(location)
-      .then((v) => { this.storeLocationId(v.key) })
+      .then((v) => { this.storeLocationId(v.key); })
+      .then(this.subscribeToFirebase)
   }
 
   updateLocation(location: ILocation) {
     this.locationsService.update(location, { position: location.position, updated: timeStamp });
+    this.subscribeToFirebase();
+  }
+
+  subscribeToFirebase() {
+    this.locations$.subscribe((l) => { this.filterLocations(l); });
+    //this.filterMyLocation();
+  }
+
+  // filterMyLocation() {
+  //   this.locations$
+  //     .flatMap((data) => data)
+  //     .filter(l => l.$key === this.locationId)
+  //     .subscribe((location) => { this.store.dispatch({ type: SET_MY_LOCATION, payload: location }); })
+  // }
+
+  // Filter for locations that include me as a contact and were updated in last 24 hours
+  filterLocations(locations: ILocation[]): void {
+    let myLocation = locations.filter((l) => { return l.$key === this.locationId; })
+    let contacts = locations.filter((l) => {
+      //this.testForNewUser(l);
+      return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
+    });
+    let combined = [].concat(...contacts).concat(myLocation);
+    this.store.dispatch({ type: UPDATE_SETTINGS, payload: {
+        contacts: contacts,
+        myLocation: myLocation[0],
+        myPins: combined
+      }
+    });
+  }
+
+  // testForNewUser(location: ILocation): void {
+  //   if ((location.$key === this.locationId) && (location.name === 'Me')) { this.newUser = true; }
+  // }
+
+  private containsMyLocationId(location: ILocation): boolean {
+    return (this.isMyLocationId(location) || this.isLinkedToMyLocationId(location)) ? true : false;
+  }
+
+  private isMyLocationId(location: ILocation): boolean {
+    return (location.$key === this.locationId) ? true : false;
+  }
+
+  private isLinkedToMyLocationId(location: ILocation): boolean {
+    return location.contacts && (location.contacts.indexOf(this.locationId) > -1) ? true : false;
+  }
+
+  private hasUpdatedInLastDay(location: ILocation): boolean {
+    return (moment().diff(moment(location.updated), 'days') === 0);
   }
 
   storeLocationId(id) {
+    this.locationId = id;
     this.store.dispatch({ type: SET_LOCATION_ID, payload: id });
-    this.localstorageService.set('proximoLocationId', id);
+    this.localstorageService.set(this.locationKey, id);
   }
 
 }

@@ -15,7 +15,9 @@ import {LocationsService} from '../locations.service';
 import {LocalstorageService} from '../localstorage.service';
 import {ContactsComponent} from '../contacts/contacts.component';
 import {timeStamp, uniqueArray, removeItemFromArray} from '../utils';
-import * as moment from 'moment';
+import { Store } from '@ngrx/store';
+import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, TOGGLE_CONTACTS_PANEL, ISettings } from '../reducers/settings';
+import { AppState } from '../app.component';
 
 @Component({
     moduleId: module.id,
@@ -27,12 +29,9 @@ import * as moment from 'moment';
 })
 export class MapComponent implements OnInit {
 
+    app: Observable<any>;
+    settings: ISettings;
     map: any;
-    locationId: string;
-    locations$: Observable<ILocation[]>;
-    contacts$: Observable<ILocation[]>;
-    me$: Observable<ILocation>;
-    joinId: string = undefined;
     joinName: string = undefined;
     newUser: boolean = false;
     options: any = { zoom: 12 };
@@ -54,50 +53,47 @@ export class MapComponent implements OnInit {
         private route: ActivatedRoute,
         private locationsService: LocationsService,
         private localstorageService: LocalstorageService,
-        private geoService: GeolocationService
+        private geoService: GeolocationService,
+        private store: Store<AppState>
     ) {
         this.markers = new Map;
-        this.locationId = this.localstorageService.get('proximoLocationId');
         this.setJoinIdFromUrl();
-        this.locations$ = locationsService.locations$;
-        this.locations$
-            .delay(1000)
-            .subscribe((l) => {
-                if (this.locationId === null) { this.locationId = this.localstorageService.get('proximoLocationId'); }
-                this.filterContacts(l);
-                if (this.newUser) { this.router.navigate(['../newuser/', (this.joinId) ? this.joinId : this.locationId], { relativeTo: this.route }); }
-                if ((this.joinId !== undefined) && (this.joinId !== this.locationId)) { this.linkUsers(this.joinId, l); }
-                else { this.displayMarkers(l); }
-            });
+        this.app = store.select('settings');
+        this.app.subscribe((s) => {
+            this.updateMap(s);
+        });
+        //         //if (this.newUser) { this.router.navigate(['../newuser/', (this.settings.joinId) ? this.settings.joinId : this.settings.locationId], { relativeTo: this.route }); }
+        //         if ((this.settings.joinId !== undefined) && (this.settings.joinId !== this.settings.locationId)) { this.linkUsers(this.settings.joinId, l); }
+        //         else { this.displayMarkers(l); }
     }
 
     setJoinIdFromUrl() {
         this.route.params.subscribe(params => {
-            if (params['id']) { this.joinId = params['id']; }
-            if (params['firstname']) { this.locationsService.updateByKey(this.locationId, { name: params['firstname'] }); }
-            if (params['colour']) { this.locationsService.updateByKey(this.locationId, { color: params['colour'] }); }
+            if (params['id']) { this.settings.joinId = params['id']; }
+            if (params['firstname']) { this.locationsService.updateByKey(this.settings.locationId, { name: params['firstname'] }); }
+            if (params['colour']) { this.locationsService.updateByKey(this.settings.locationId, { color: params['colour'] }); }
             this.router.navigate(['/'], { relativeTo: this.route });
         });
     }
 
-    linkUsers(theirId: string, locations: ILocation[]) {
-        // TODO: show modal to confirm
-        locations.forEach((l) => {
-            if (this.isMyLocationId(l)) { this.linkMeToThem(theirId, l); }
-            if (l.$key === theirId) { this.linkThemToMe(l); }
-        });
-        this.joinId = undefined;
-        this.router.navigate(['/'], { relativeTo: this.route });
-    }
+    // linkUsers(theirId: string, locations: ILocation[]) {
+    //     // TODO: show modal to confirm
+    //     locations.forEach((l) => {
+    //         if (this.isMyLocationId(l)) { this.linkMeToThem(theirId, l); }
+    //         if (l.$key === theirId) { this.linkThemToMe(l); }
+    //     });
+    //     this.settings.joinId = undefined;
+    //     this.router.navigate(['/'], { relativeTo: this.route });
+    // }
 
     linkMeToThem(theirId: string, myLocation: ILocation) {
         let c: string[] = [theirId];
         if (myLocation.contacts) { c = uniqueArray(c.concat(myLocation.contacts)); }
-        this.locationsService.updateByKey(this.locationId, { contacts: c, updated: timeStamp });
+        this.locationsService.updateByKey(this.settings.locationId, { contacts: c, updated: timeStamp });
     }
 
     linkThemToMe(theirLocation: ILocation) {
-        let c: string[] = [this.locationId];
+        let c: string[] = [this.settings.locationId];
         if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
         this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: timeStamp });
     }
@@ -105,31 +101,11 @@ export class MapComponent implements OnInit {
     ngOnInit() {
         this.resetBounds();
         this.show();
-        this.me$ = this.myLocation();
         //this.geoService.watch(this.updateMyLocation.bind(this));
     }
 
-    myLocation(): Observable<ILocation> {
-        return this.locations$
-            .flatMap((data) => data)
-            .filter(l => l.$key === this.locationId);
-    }
-
-    filterContacts(locations: ILocation[]): void {
-        // Filter for locations that include me as a contact and were updated in last 24 hours
-        let array = locations.filter((l) => {
-            this.testForNewUser(l);
-            return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
-        });
-        this.contacts$ = Observable.of(array);
-    }
-
     testForNewUser(location: ILocation): void {
-        if ((location.$key === this.locationId) && (location.name === 'Me')) { this.newUser = true; }
-    }
-
-    updateMyLocation(latLng: LatLng) {
-        this.locationsService.updateByKey(this.locationId, { position: latLng, updated: timeStamp });
+        if ((location.$key === this.settings.locationId) && (location.name === 'Me')) { this.newUser = true; }
     }
 
     private resetBounds() {
@@ -145,30 +121,15 @@ export class MapComponent implements OnInit {
         }
     }
 
+    updateMap(settings: ISettings) {
+        this.settings = <ISettings>settings;
+        this.displayMarkers(settings.myPins);
+    }
+
     private displayMarkers(markers: ILocation[]) {
         this.removeAllMarkers();
-        markers.forEach((m) => {
-            if (this.containsMyLocationId(m) && this.hasUpdatedInLastDay(m)) {
-                this.addMarker(m);
-            }
-        });
-        if (this.autoScale) { this.scaleToFit(); this.autoScale = false; }
-    }
-
-    private containsMyLocationId(location: ILocation): boolean {
-        return (this.isMyLocationId(location) || this.isLinkedToMyLocationId(location)) ? true : false;
-    }
-
-    private isMyLocationId(location: ILocation): boolean {
-        return (location.$key === this.locationId) ? true : false;
-    }
-
-    private isLinkedToMyLocationId(location: ILocation): boolean {
-        return location.contacts && (location.contacts.indexOf(this.locationId) > -1) ? true : false;
-    }
-
-    private hasUpdatedInLastDay(location: ILocation): boolean {
-        return (moment().diff(moment(location.updated), 'days') === 0);
+        markers.forEach((m) => { this.addMarker(m); });
+        if (this.autoScale) { this.scaleToFit(); /*this.autoScale = false;*/ }      //TODO: sort our autoscale
     }
 
     private addMarker(marker: ILocation) {
@@ -213,9 +174,8 @@ export class MapComponent implements OnInit {
         this.resetBounds();
     }
 
-    private centreMe(key: string = this.localstorageService.get('proximoLocationId')) {
-        let me = this.findInMarkersList(key);
-        this.map.panTo(me.position);
+    private centreMe($event) {
+        this.map.panTo(this.settings.myLocation.position);
     }
 
     private scaleToFit() {
@@ -224,18 +184,16 @@ export class MapComponent implements OnInit {
     }
 
     private addPeople($event) {
-        this.router.navigate(['../invite/', this.locationId], { relativeTo: this.route });
+        this.router.navigate(['../invite/', this.settings.locationId], { relativeTo: this.route });
     }
 
     // Unlink contact (both ways)
     private unlinkContact(contact: ILocation) {
-        removeItemFromArray(contact.contacts, this.locationId);
+        removeItemFromArray(contact.contacts, this.settings.locationId);
         this.locationsService.updateByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
-        this.me$.subscribe((me) => { 
-            removeItemFromArray(me.contacts, contact.$key);
-            this.autoScale = true;
-            this.locationsService.updateByKey(me.$key, { contacts: me.contacts, updated: timeStamp });
-        });
+            // removeItemFromArray(me.contacts, contact.$key);
+            // this.autoScale = true;
+            // this.locationsService.updateByKey(me.$key, { contacts: me.contacts, updated: timeStamp });
     }
 
     toggleContacts($event) {

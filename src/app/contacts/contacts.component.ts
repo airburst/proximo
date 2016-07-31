@@ -7,6 +7,7 @@ import { MdToolbar } from '@angular2-material/toolbar';
 import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import { Location, ILocation, LatLng } from '../location';
 import * as moment from 'moment';
+import { ISettings } from '../reducers/settings';
 
 interface Contact extends ILocation {
   clicked: boolean;
@@ -31,8 +32,8 @@ export class ContactsComponent implements OnInit {
   showConfirmDialog: boolean = false;
   selectedContact: ILocation;
 
-  @Input() contacts: ILocation[];
-  @Input() me: ILocation;
+  @Input() settings: ISettings;
+  //@Input() me: ILocation;
   @Input() show: boolean;
   @Output() centre = new EventEmitter();
   @Output() remove = new EventEmitter();
@@ -44,7 +45,7 @@ export class ContactsComponent implements OnInit {
   }
 
   distanceTo(contact: ILocation): number {
-    return this.distanceBetween(this.me.position, contact.position) / this.conversion;
+    return this.distanceBetween(this.settings.myLocation.position, contact.position) / this.conversion;
   }
 
   distanceBetween(latLng1: LatLng, latLng2: LatLng): number {
