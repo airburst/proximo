@@ -32,7 +32,6 @@ export class MapComponent implements OnInit {
     app: Observable<any>;
     settings: ISettings;
     map: any;
-    joinName: string = undefined;
     newUser: boolean = false;
     options: any = { zoom: 12 };
     icon: any = {
@@ -57,55 +56,16 @@ export class MapComponent implements OnInit {
         private store: Store<AppState>
     ) {
         this.markers = new Map;
-        this.setJoinIdFromUrl();
         this.app = store.select('settings');
         this.app.subscribe((s) => {
             this.updateMap(s);
         });
-        //         //if (this.newUser) { this.router.navigate(['../newuser/', (this.settings.joinId) ? this.settings.joinId : this.settings.locationId], { relativeTo: this.route }); }
-        //         if ((this.settings.joinId !== undefined) && (this.settings.joinId !== this.settings.locationId)) { this.linkUsers(this.settings.joinId, l); }
-        //         else { this.displayMarkers(l); }
-    }
-
-    setJoinIdFromUrl() {
-        this.route.params.subscribe(params => {
-            if (params['id']) { this.settings.joinId = params['id']; }
-            if (params['firstname']) { this.locationsService.updateByKey(this.settings.locationId, { name: params['firstname'] }); }
-            if (params['colour']) { this.locationsService.updateByKey(this.settings.locationId, { color: params['colour'] }); }
-            this.router.navigate(['/'], { relativeTo: this.route });
-        });
-    }
-
-    // linkUsers(theirId: string, locations: ILocation[]) {
-    //     // TODO: show modal to confirm
-    //     locations.forEach((l) => {
-    //         if (this.isMyLocationId(l)) { this.linkMeToThem(theirId, l); }
-    //         if (l.$key === theirId) { this.linkThemToMe(l); }
-    //     });
-    //     this.settings.joinId = undefined;
-    //     this.router.navigate(['/'], { relativeTo: this.route });
-    // }
-
-    linkMeToThem(theirId: string, myLocation: ILocation) {
-        let c: string[] = [theirId];
-        if (myLocation.contacts) { c = uniqueArray(c.concat(myLocation.contacts)); }
-        this.locationsService.updateByKey(this.settings.locationId, { contacts: c, updated: timeStamp });
-    }
-
-    linkThemToMe(theirLocation: ILocation) {
-        let c: string[] = [this.settings.locationId];
-        if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
-        this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: timeStamp });
     }
 
     ngOnInit() {
         this.resetBounds();
         this.show();
         //this.geoService.watch(this.updateMyLocation.bind(this));
-    }
-
-    testForNewUser(location: ILocation): void {
-        if ((location.$key === this.settings.locationId) && (location.name === 'Me')) { this.newUser = true; }
     }
 
     private resetBounds() {

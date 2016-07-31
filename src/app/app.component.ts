@@ -81,35 +81,38 @@ export class AppComponent implements OnInit {
   }
 
   updateLocation(location: ILocation) {
+    console.log('[App] Updating geo position')                            //
     this.locationsService.update(location, { position: location.position, updated: timeStamp });
     this.subscribeToFirebase();
   }
 
   subscribeToFirebase() {
     this.locations$.subscribe((l) => { this.filterLocations(l); });
-    //this.filterMyLocation();
   }
-
-  // filterMyLocation() {
-  //   this.locations$
-  //     .flatMap((data) => data)
-  //     .filter(l => l.$key === this.locationId)
-  //     .subscribe((location) => { this.store.dispatch({ type: SET_MY_LOCATION, payload: location }); })
-  // }
 
   // Filter for locations that include me as a contact and were updated in last 24 hours
   filterLocations(locations: ILocation[]): void {
-    let myLocation = locations.filter((l) => { return l.$key === this.locationId; })
-    let contacts = locations.filter((l) => {
-      //this.testForNewUser(l);
-      return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
-    });
+    console.log('[App] Filtering locations')                            //
+    let myLocation = this.filterByKey(locations, this.locationId);
+    let contacts = this.filterMyContacts(locations);
     let combined = [].concat(...contacts).concat(myLocation);
+    console.log('[App] Updating store')                                 //
     this.store.dispatch({ type: UPDATE_SETTINGS, payload: {
         contacts: contacts,
-        myLocation: myLocation[0],
-        myPins: combined
+        myLocation: myLocation,
+        myPins: combined,
+        initialised: true
       }
+    });
+  }
+
+  public filterByKey(locations: ILocation[], key: string): ILocation {
+    return locations.filter((l) => { return l.$key === key; })[0];
+  }
+
+  filterMyContacts(locations: ILocation[]): ILocation[] {
+    return locations.filter((l) => {
+      return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
     });
   }
 

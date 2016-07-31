@@ -1,6 +1,7 @@
 import {ActionReducer, Action} from '@ngrx/store';
 import {ILocation} from '../location';
 
+export const INITIALISED = 'INITIALISED';
 export const SET_LOCATION_ID = 'SET_LOCATION_ID';
 export const SET_JOIN_ID = 'SET_JOIN_ID';
 export const SET_MY_LOCATION = 'SET_MY_LOCATION';
@@ -16,6 +17,7 @@ export interface ISettings {
     contacts: ILocation[];
     myPins: ILocation[];
     showContactsPanel: boolean;
+    initialised: boolean;
     // centre map
     // scale to fit
 }
@@ -26,13 +28,17 @@ const initialSettings = {
     myLocation: null,
     contacts: [],
     myPins: [],
-    showContactsPanel: false
+    showContactsPanel: false,
+    initialised: false
 }
 
 export const settingsReducer: ActionReducer<ISettings> = (state: ISettings = initialSettings, action: Action) => {
 
     switch (action.type) {
 
+        case INITIALISED:
+            return Object.assign({}, state, { initialised: true });
+            
         case SET_LOCATION_ID:
             return Object.assign({}, state, { locationId: action.payload });
 

@@ -4,7 +4,7 @@ import {
   FirebaseListObservable,
   FirebaseObjectObservable
 } from 'angularfire2';
-import {ILocation} from './location';
+import { ILocation } from './location';
 
 @Injectable()
 export class LocationsService {
@@ -26,6 +26,13 @@ export class LocationsService {
   update(location: ILocation, changes: any): Promise<any> {
     return this.locations$.update(location.$key, changes);
   }
+
+  // getLocationByKey(key: string): ILocation {
+  //   let loc: ILocation;
+  //   this.locations$.subscribe((l) => {
+  //     return l.filter((l) => { return l.$key === key; })[0];
+  //   });
+  // }
 
   updateByKey(key: string, changes: any): Promise<any> {
     return this.locations$.update(key, changes);

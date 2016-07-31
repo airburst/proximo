@@ -73,6 +73,7 @@ const barrels: string[] = [
   'app/contacts',
   'app/invite',
   'app/newuser',
+  'app/join',
   /** @cli-barrel */
 ];
 

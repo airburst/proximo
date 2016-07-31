@@ -28,4 +28,5 @@ export class Location implements ILocation {
         this.contacts = [];
         this.updated = new Date().toISOString();
     }
+    
 }
