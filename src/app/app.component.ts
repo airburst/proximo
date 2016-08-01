@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
   ) {
     this.appSettings = store.select('settings');
     this.locations$ = locationsService.locations$;
+    console.log('[App]', this.locations$)                   //
   }
 
   ngOnInit() {
@@ -81,22 +82,20 @@ export class AppComponent implements OnInit {
   }
 
   updateLocation(location: ILocation) {
-    console.log('[App] Updating geo position')                            //
     this.locationsService.update(location, { position: location.position, updated: timeStamp });
     this.subscribeToFirebase();
   }
 
   subscribeToFirebase() {
+    console.log('[App.subscribeToFirebase]', this.locations$)                   //
     this.locations$.subscribe((l) => { this.filterLocations(l); });
   }
 
   // Filter for locations that include me as a contact and were updated in last 24 hours
   filterLocations(locations: ILocation[]): void {
-    console.log('[App] Filtering locations')                            //
     let myLocation = this.filterByKey(locations, this.locationId);
     let contacts = this.filterMyContacts(locations);
     let combined = [].concat(...contacts).concat(myLocation);
-    console.log('[App] Updating store')                                 //
     this.store.dispatch({ type: UPDATE_SETTINGS, payload: {
         contacts: contacts,
         myLocation: myLocation,

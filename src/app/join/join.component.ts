@@ -35,10 +35,12 @@ export class JoinComponent implements OnInit {
     this.app.subscribe((settings) => {
       if (settings.initialised) {
         this.settings = settings;
-        if (!settings.joinId) { this.setJoinIdFromUrl(); }
-        console.log('[Join] Settings', this.settings);       //
-        if (settings.joinId !== settings.locationId) {
-          this.linkUsers(settings.joinId);
+        if (settings.joinId === null) {
+          this.setJoinIdFromUrl();
+        } else {
+          if (settings.joinId !== settings.locationId) {
+            this.linkUsers(settings.joinId);
+          }
         }
       }
     });
@@ -51,15 +53,16 @@ export class JoinComponent implements OnInit {
   }
 
   linkUsers(theirId: string) {
-    console.log('[Join] Link Users', theirId);                    //
-    this.locationsService.locations$.subscribe((list) => {
-      console.log('[Join] list of locations', list);                    //
-      // list.forEach((l) => {
-      //   if (this.isMyLocationId(l)) { this.linkMeToThem(theirId); }
-      //   if (l.$key === theirId) { this.linkThemToMe(l); }
-      // });
+    this.locationsService.locations$
+      .combineLatest(this.store)
+      .subscribe((l) => {
+        l[0].forEach((l) => {
+          if (this.isMyLocationId(l)) { this.linkMeToThem(theirId); }
+          if (l.$key === theirId) { this.linkThemToMe(l); }
+          
+          this.goToMap();
+        });
     })
-    //.then(this.goToMap)
   }
 
   private isMyLocationId(location: ILocation): boolean {

@@ -1,8 +1,6 @@
 ///<reference path="../../../typings/window.extend.d.ts"/>
 import { Component, OnInit } from '@angular/core';
-import {Observable} from 'rxjs/Rx';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/filter';
+import { Observable } from 'rxjs/Rx';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
@@ -57,14 +55,12 @@ export class MapComponent implements OnInit {
     ) {
         this.markers = new Map;
         this.app = store.select('settings');
-        this.app.subscribe((s) => {
-            this.updateMap(s);
-        });
     }
 
     ngOnInit() {
         this.resetBounds();
         this.show();
+        this.app.subscribe((s) => { this.updateMap(s); });
         //this.geoService.watch(this.updateMyLocation.bind(this));
     }
 
