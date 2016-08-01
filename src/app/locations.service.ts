@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/takeLast';
 import {
   AngularFire,
   FirebaseListObservable,
@@ -27,12 +28,15 @@ export class LocationsService {
     return this.locations$.update(location.$key, changes);
   }
 
-  // getLocationByKey(key: string): ILocation {
-  //   let loc: ILocation;
-  //   this.locations$.subscribe((l) => {
-  //     return l.filter((l) => { return l.$key === key; })[0];
-  //   });
-  // }
+  getLocationByKey(key: string): Promise<any> {
+    let loc: ILocation;
+    return new Promise((resolve: any, reject: any) => {
+      this.locations$.subscribe((l) => {
+        let item = l[l.length - 1];
+        if ((item !== undefined) && (item.$key === key)) { resolve(item); }
+      }, reject);
+    });
+  }
 
   updateByKey(key: string, changes: any): Promise<any> {
     return this.locations$.update(key, changes);

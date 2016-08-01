@@ -52,17 +52,14 @@ export class JoinComponent implements OnInit {
     });   // The router will throw an error if there was no :id path
   }
 
-  linkUsers(theirId: string) {
-    this.locationsService.locations$
-      .combineLatest(this.store)
-      .subscribe((l) => {
-        l[0].forEach((l) => {
-          if (this.isMyLocationId(l)) { this.linkMeToThem(theirId); }
-          if (l.$key === theirId) { this.linkThemToMe(l); }
-          
-          this.goToMap();
-        });
-    })
+  linkUsers(theirId: string) {                          //TODO move into locationsService
+    this.locationsService.getLocationByKey(theirId)
+      .then((match) => {
+        this.linkMeToThem(theirId);
+        this.linkThemToMe(match);
+        this.goToMap();
+      })
+      .catch(error => console.log(error));
   }
 
   private isMyLocationId(location: ILocation): boolean {

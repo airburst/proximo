@@ -5,9 +5,10 @@
             "name": "Launch localhost with sourcemaps",
             "type": "chrome",
             "request": "launch",
+            "port": 5858,
             "url": "http://localhost:4200",
             "sourceMaps": true,
-            "webRoot": "${workspaceRoot}"
+            "webRoot": "${workspaceRoot}/src/index.html"
         },
         {
             "name": "Launch",

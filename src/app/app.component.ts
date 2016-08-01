@@ -39,7 +39,6 @@ export class AppComponent implements OnInit {
   ) {
     this.appSettings = store.select('settings');
     this.locations$ = locationsService.locations$;
-    console.log('[App]', this.locations$)                   //
   }
 
   ngOnInit() {
@@ -87,7 +86,6 @@ export class AppComponent implements OnInit {
   }
 
   subscribeToFirebase() {
-    console.log('[App.subscribeToFirebase]', this.locations$)                   //
     this.locations$.subscribe((l) => { this.filterLocations(l); });
   }
 
