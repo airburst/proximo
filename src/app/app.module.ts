@@ -1,9 +1,15 @@
-import { NgModule } from '@angular/core';
+import { NgModule, provide } from '@angular/core';
 import { BrowserModule  } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { routing } from './routes.component';
 import { provideStore } from '@ngrx/store';
+// import { 
+//     createStore,
+//     Store,
+//     compose,
+//     StoreEnhancer 
+// } from 'redux';
 import { settingsReducer } from './reducers/settings';
 import { MdButtonModule } from '@angular2-material/button';
 import { MdCardModule } from '@angular2-material/card';
@@ -13,6 +19,11 @@ import { MdInputModule } from '@angular2-material/input';
 import { MdListModule } from '@angular2-material/list';
 import { MdToolbarModule } from '@angular2-material/toolbar';
 import { FIREBASE_PROVIDERS, defaultFirebase } from 'angularfire2';
+
+// let store: Store<AppState> = createStore<AppState>(
+//   reducer,
+//   compose(devtools)
+// );
 
 @NgModule({
     declarations: [AppComponent],
@@ -31,6 +42,7 @@ import { FIREBASE_PROVIDERS, defaultFirebase } from 'angularfire2';
     ],
     providers: [
         provideStore({ settings: settingsReducer }),
+        //provide(AppStore, { useFactory: () => store }),
         FIREBASE_PROVIDERS,
         defaultFirebase({
             apiKey: "AIzaSyDGe_FmSZBr74_Eo9rbe-Ld9r264Ay47hE",
