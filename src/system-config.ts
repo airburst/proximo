@@ -74,6 +74,7 @@ const barrels: string[] = [
   'app/invite',
   'app/newuser',
   'app/join',
+  'app/test',
   /** @cli-barrel */
 ];
 

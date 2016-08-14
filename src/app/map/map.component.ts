@@ -1,7 +1,7 @@
 ///<reference path="../../../typings/window.extend.d.ts"/>
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
@@ -22,7 +22,7 @@ import { AppState } from '../app.component';
     selector: 'app-map',
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
-    directives: [ROUTER_DIRECTIVES, MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar, ContactsComponent],
+    directives: [MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar, ContactsComponent],
     providers: [MdIconRegistry, LocationsService, LocalstorageService, GeolocationService]
 })
 export class MapComponent implements OnInit {

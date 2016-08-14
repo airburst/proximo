@@ -1,14 +1,8 @@
 /* tslint:disable:no-unused-variable */
-
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
+import { By }           from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { addProviders, async, inject } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-
-beforeEachProviders(() => [AppComponent]);
 
 // describe('App: Proximo2', () => {
 //   it('should create the app',

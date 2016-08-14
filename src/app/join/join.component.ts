@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ILocation } from '../location';
 import { Store } from '@ngrx/store';
 import { SET_JOIN_ID, ISettings } from '../reducers/settings';
@@ -14,7 +14,6 @@ import { LocationsService } from '../locations.service';
   selector: 'app-join',
   templateUrl: 'join.component.html',
   styleUrls: ['join.component.css'],
-  directives: [ROUTER_DIRECTIVES],
   providers: [LocationsService]
 })
 export class JoinComponent implements OnInit {

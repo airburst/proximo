@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, SET_CONTACTS, UPDATE_SETTINGS, ISettings } from './reducers/settings';
 import { GeolocationService } from './geolocation.service';
@@ -19,7 +19,6 @@ export interface AppState {
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [ROUTER_DIRECTIVES],
   providers: [GeolocationService, LocalstorageService, LocationsService]
 })
 export class AppComponent implements OnInit {
@@ -94,7 +93,8 @@ export class AppComponent implements OnInit {
     let myLocation = this.filterByKey(locations, this.locationId);
     let contacts = this.filterMyContacts(locations);
     let combined = [].concat(...contacts).concat(myLocation);
-    this.store.dispatch({ type: UPDATE_SETTINGS, payload: {
+    this.store.dispatch({
+      type: UPDATE_SETTINGS, payload: {
         contacts: contacts,
         myLocation: myLocation,
         myPins: combined,
