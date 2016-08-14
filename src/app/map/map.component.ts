@@ -2,11 +2,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
-import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
-import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
-import { MdToolbar } from '@angular2-material/toolbar';
-import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import {ILocation, Location, LatLng} from '../location';
 import {GeolocationService} from '../geolocation.service';
 import {LocationsService} from '../locations.service';
@@ -22,8 +17,8 @@ import { AppState } from '../app.component';
     selector: 'app-map',
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
-    directives: [MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MD_LIST_DIRECTIVES, MdIcon, MdToolbar, ContactsComponent],
-    providers: [MdIconRegistry, LocationsService, LocalstorageService, GeolocationService]
+    directives: [ContactsComponent],
+    providers: [LocationsService, LocalstorageService, GeolocationService]
 })
 export class MapComponent implements OnInit {
 
@@ -36,9 +31,9 @@ export class MapComponent implements OnInit {
         path: window.google.maps.SymbolPath.CIRCLE,
         fillColor: 'white',
         fillOpacity: 0.8,
-        scale: 14,
+        scale: 15,
         strokeColor: 'blue',
-        strokeWeight: 2
+        strokeWeight: 4
     };
     markers: any;
     bounds: any;
