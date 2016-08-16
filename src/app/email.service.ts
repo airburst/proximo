@@ -6,7 +6,7 @@ import { EmailTemplates } from './email-templates';
 @Injectable()
 export class EmailService {
 
-  url: string = 'http://api.fairhursts.net/email';
+  url: string = 'https://api.fairhursts.net/email';
   //from: string = 'noreply@proximate.fairhursts.net';
 
   constructor(private http: Http) { }
