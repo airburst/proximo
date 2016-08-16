@@ -5,7 +5,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import {ILocation, Location, LatLng} from '../location';
 import {GeolocationService} from '../geolocation.service';
 import {LocationsService} from '../locations.service';
-import {LocalstorageService} from '../localstorage.service';
 import {ContactsComponent} from '../contacts/contacts.component';
 import {timeStamp, uniqueArray, removeItemFromArray} from '../utils';
 import { Store } from '@ngrx/store';
@@ -18,7 +17,7 @@ import { AppState } from '../app.component';
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
     directives: [ContactsComponent],
-    providers: [LocationsService, LocalstorageService, GeolocationService]
+    providers: [LocationsService, GeolocationService]
 })
 export class MapComponent implements OnInit {
 
@@ -44,7 +43,6 @@ export class MapComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private locationsService: LocationsService,
-        private localstorageService: LocalstorageService,
         private geoService: GeolocationService,
         private store: Store<AppState>
     ) {

@@ -4,7 +4,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, SET_CONTACTS, UPDATE_SETTINGS, ISettings } from './reducers/settings';
 import { GeolocationService } from './geolocation.service';
-import { LocalstorageService } from './localstorage.service';
 import { LocationsService } from './locations.service';
 import { ILocation, Location, LatLng } from './location';
 import { timeStamp } from './utils';
@@ -19,7 +18,7 @@ export interface AppState {
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  providers: [GeolocationService, LocalstorageService, LocationsService]
+  providers: [GeolocationService, LocationsService]
 })
 export class AppComponent implements OnInit {
 
@@ -31,7 +30,6 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private localstorageService: LocalstorageService,
     private geolocationService: GeolocationService,
     private locationsService: LocationsService,
     public store: Store<AppState>
@@ -41,13 +39,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    let id = this.getLocalId();
+    let id = window.localStorage.getItem(this.locationKey);
     if (id) { this.storeLocationId(id); }
     this.getGeoPosition(id);
-  }
-
-  getLocalId(): string {
-    return this.localstorageService.get(this.locationKey);
   }
 
   getGeoPosition(locationId: string) {
@@ -135,8 +129,7 @@ export class AppComponent implements OnInit {
 
   storeLocationId(id) {
     this.locationId = id;
-    this.store.dispatch({ type: SET_LOCATION_ID, payload: id });
-    this.localstorageService.set(this.locationKey, id);
+    window.localStorage.setItem(this.locationKey, id);
   }
 
 }
