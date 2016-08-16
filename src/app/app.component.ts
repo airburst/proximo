@@ -24,8 +24,8 @@ export class AppComponent implements OnInit {
 
   locationKey: string = 'proximateLocationId';
   locationId: string;
-  appSettings: Observable<any>;
   locations$: Observable<ILocation[]>;
+  newUser: boolean;
 
   constructor(
     private router: Router,
@@ -34,27 +34,30 @@ export class AppComponent implements OnInit {
     private locationsService: LocationsService,
     public store: Store<AppState>
   ) {
-    this.appSettings = store.select('settings');
+    this.locationId = window.localStorage.getItem(this.locationKey);
+    this.newUser = (this.locationId === null) ? true : false;
     this.locations$ = locationsService.locations$;
   }
 
   ngOnInit() {
-    let id = window.localStorage.getItem(this.locationKey);
-    if (id) { this.storeLocationId(id); }
-    this.getGeoPosition(id);
+    // Get stream of locations from Firebase and filter for my contacts
+    this.subscribeToFirebase();
+    this.getGeoPosition(this.locationId);
   }
 
   getGeoPosition(locationId: string) {
     this.geolocationService.getLocation()
-      .then((position: any) => { this.setLocation(position, locationId); })
+      .then((position: any) => { 
+        this.setLocation({ lat: position.latitude, lng: position.longitude }, locationId);
+      })
       .catch((error: any) => {
         console.log('Geo error', error)                                             //
         //this.router.navigate(['./nogeo'], { relativeTo: this.route });
       });
   }
 
-  setLocation(position: any, locationId: string) {
-    let location = new Location({ lat: position.latitude, lng: position.longitude });
+  setLocation(position: LatLng, locationId: string) {
+    let location = new Location(position);
     this.addOrUpdateLocationInDatabase(location, locationId);
   }
 
@@ -69,13 +72,11 @@ export class AppComponent implements OnInit {
 
   addLocation(location: ILocation) {
     this.locationsService.add(location)
-      .then((v) => { this.storeLocationId(v.key); })
-      .then(this.subscribeToFirebase)
+      .then((v) => { this.storeLocationId(v.key); });
   }
 
   updateLocation(location: ILocation) {
     this.locationsService.update(location, { position: location.position, updated: timeStamp });
-    this.subscribeToFirebase();
   }
 
   subscribeToFirebase() {

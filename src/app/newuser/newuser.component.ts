@@ -1,8 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-  FORM_DIRECTIVES,
-  REACTIVE_FORM_DIRECTIVES,
   Validators,
   FormBuilder,
   FormGroup,
@@ -18,8 +16,7 @@ interface Option {
   moduleId: module.id,
   selector: 'app-newuser',
   templateUrl: 'newuser.component.html',
-  styleUrls: ['newuser.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
+  styleUrls: ['newuser.component.css']
 })
 export class NewuserComponent implements OnInit {
 

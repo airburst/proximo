@@ -1,16 +1,13 @@
 import { NgModule, provide } from '@angular/core';
 import { BrowserModule  } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
+import { MapComponent } from './map/map.component';
+import { InviteComponent } from './invite/invite.component';
+import { JoinComponent } from './join/join.component';
+import { NewuserComponent } from './newuser/newuser.component';
+import { NogeoComponent } from './nogeo/nogeo.component';
 import { routing } from './routes.component';
-import { provideStore } from '@ngrx/store';
-// import { 
-//     createStore,
-//     Store,
-//     compose,
-//     StoreEnhancer 
-// } from 'redux';
-import { settingsReducer } from './reducers/settings';
 import { MdButtonModule } from '@angular2-material/button';
 import { MdCardModule } from '@angular2-material/card';
 import { MdCoreModule } from '@angular2-material/core';
@@ -19,6 +16,14 @@ import { MdInputModule } from '@angular2-material/input';
 import { MdListModule } from '@angular2-material/list';
 import { MdToolbarModule } from '@angular2-material/toolbar';
 import { FIREBASE_PROVIDERS, defaultFirebase } from 'angularfire2';
+import { provideStore } from '@ngrx/store';
+// import { 
+//     createStore,
+//     Store,
+//     compose,
+//     StoreEnhancer 
+// } from 'redux';
+import { settingsReducer } from './reducers/settings';
 
 // let store: Store<AppState> = createStore<AppState>(
 //   reducer,
@@ -26,10 +31,17 @@ import { FIREBASE_PROVIDERS, defaultFirebase } from 'angularfire2';
 // );
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [
+        AppComponent, 
+        MapComponent,
+        InviteComponent,
+        JoinComponent,
+        NewuserComponent,
+        NogeoComponent
+    ],
     imports: [
         BrowserModule,  
-        FormsModule,
+        ReactiveFormsModule,
         routing,
         MdCoreModule, 
         MdButtonModule, 

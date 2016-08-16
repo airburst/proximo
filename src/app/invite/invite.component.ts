@@ -1,8 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-  FORM_DIRECTIVES,
-  REACTIVE_FORM_DIRECTIVES,
   Validators,
   FormBuilder,
   FormGroup,
@@ -16,7 +14,6 @@ import {validateEmail} from '../validators';
   selector: 'app-invite',
   templateUrl: 'invite.component.html',
   styleUrls: ['invite.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   providers: [EmailService, FormBuilder]
 })
 export class InviteComponent implements OnInit, AfterViewInit {

@@ -76,6 +76,7 @@ export class MapComponent implements OnInit {
     }
 
     private displayMarkers(markers: ILocation[]) {
+        console.log('Display markers...', markers)                              //
         this.removeAllMarkers();
         markers.forEach((m) => { this.addMarker(m); });
         if (this.autoScale) { this.scaleToFit(); /*this.autoScale = false;*/ }      //TODO: sort our autoscale

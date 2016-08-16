@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
-  FORM_DIRECTIVES,
-  REACTIVE_FORM_DIRECTIVES,
   Validators,
   FormBuilder,
   FormGroup,
@@ -16,13 +14,11 @@ import { AppState } from '../app.component';
 import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
 import { LocationsService } from '../locations.service';
 
-
 @Component({
   moduleId: module.id,
   selector: 'app-join',
   templateUrl: 'join.component.html',
   styleUrls: ['join.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   providers: [LocationsService]
 })
 export class JoinComponent implements OnInit {
