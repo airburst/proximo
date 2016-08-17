@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import {
-  Validators,
-  FormBuilder,
-  FormGroup,
-  AbstractControl
-} from '@angular/forms';
 import { ILocation } from '../location';
 import { Store } from '@ngrx/store';
 import { SET_JOIN_ID, ISettings } from '../reducers/settings';
 import { AppState } from '../app.component';
-import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
+import { timeStamp, uniqueArray } from '../utils';
 import { LocationsService } from '../locations.service';
 
 @Component({
@@ -81,10 +75,6 @@ export class JoinComponent implements OnInit {
     if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
     this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: timeStamp });
   }
-
-  // testForNewUser(location: ILocation): void {
-  //   if ((location.$key === this.settings.locationId) && (location.name === 'Me')) { this.newUser = true; }
-  // }
 
   public filterByKey(locations: ILocation[], key: string): ILocation {
     return locations.filter((l) => { return l.$key === key; })[0];

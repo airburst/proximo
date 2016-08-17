@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.store.dispatch({ type: SET_LOCATION_ID, payload: this.locationId });
     // Get stream of locations from Firebase and filter for my contacts
     this.subscribeToFirebase();
     this.getGeoPosition(this.locationId);
@@ -132,7 +133,7 @@ export class AppComponent implements OnInit {
   storeLocationId(id) {
     this.locationId = id;
     window.localStorage.setItem(this.locationKey, id);
-    //this.store.dispatch({ type: SET_LOCATION_ID, payload: id });
+    this.store.dispatch({ type: SET_LOCATION_ID, payload: id });
   }
 
 }
