@@ -6,7 +6,7 @@ import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, SET_CONTACTS, UPDATE_SET
 import { GeolocationService } from './geolocation.service';
 import { LocationsService } from './locations.service';
 import { ILocation, Location, LatLng } from './location';
-import { timeStamp } from './utils';
+import { timeStamp, uid } from './utils';
 import * as moment from 'moment';
 
 export interface AppState {
@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
   locationKey: string = 'proximateLocationId';
   locationId: string;
   locations$: Observable<ILocation[]>;
+  app: Observable<any>;
   newUser: boolean;
 
   constructor(
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
     this.locationId = window.localStorage.getItem(this.locationKey);
     this.newUser = (this.locationId === null) ? true : false;
     this.locations$ = locationsService.locations$;
+    this.app = store.select('settings');
   }
 
   ngOnInit() {
@@ -72,7 +74,10 @@ export class AppComponent implements OnInit {
 
   addLocation(location: ILocation) {
     this.locationsService.add(location)
-      .then((v) => { this.storeLocationId(v.key); });
+      .then((v) => { 
+        this.storeLocationId(v.key);
+        this.locationsService.updateByKey(v.key, { updated: timeStamp });  // Forces refresh after locationId is stored
+      });
   }
 
   updateLocation(location: ILocation) {
@@ -108,10 +113,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  // testForNewUser(location: ILocation): void {
-  //   if ((location.$key === this.locationId) && (location.name === 'Me')) { this.newUser = true; }
-  // }
-
   private containsMyLocationId(location: ILocation): boolean {
     return (this.isMyLocationId(location) || this.isLinkedToMyLocationId(location)) ? true : false;
   }
@@ -131,6 +132,7 @@ export class AppComponent implements OnInit {
   storeLocationId(id) {
     this.locationId = id;
     window.localStorage.setItem(this.locationKey, id);
+    //this.store.dispatch({ type: SET_LOCATION_ID, payload: id });
   }
 
 }

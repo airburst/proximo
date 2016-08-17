@@ -1,4 +1,6 @@
 /* tslint:disable:no-string-literal */
+//import {uid} from './utils';
+
 export interface LatLng {
     lat: number;
     lng: number;
@@ -6,6 +8,7 @@ export interface LatLng {
 
 export interface ILocation {
     $key: string;
+    //id: string;
     name: string;
     position: LatLng;
     color: string;
@@ -15,6 +18,7 @@ export interface ILocation {
 
 export class Location implements ILocation {
     $key: string;
+    //id: string;
     name: string;
     position: LatLng;
     color: string;
@@ -22,6 +26,7 @@ export class Location implements ILocation {
     updated: string;
 
     constructor(latLng: LatLng, name: string = 'Me', color: string = 'blue') {
+        //this.id = uid();
         this.name = name;
         this.position = latLng;
         this.color = color;

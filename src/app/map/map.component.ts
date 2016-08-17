@@ -72,13 +72,16 @@ export class MapComponent implements OnInit {
 
     updateMap(settings: ISettings) {
         this.settings = <ISettings>settings;
+        console.log('settings', settings)                                           //
         this.displayMarkers(settings.myPins);
     }
 
     private displayMarkers(markers: ILocation[]) {
-        console.log('Display markers...', markers)                              //
+        console.log('display markers', markers)                                      //
         this.removeAllMarkers();
-        markers.forEach((m) => { this.addMarker(m); });
+        markers.forEach((m) => { 
+            if (m !== undefined) { this.addMarker(m); }
+        });
         if (this.autoScale) { this.scaleToFit(); /*this.autoScale = false;*/ }      //TODO: sort our autoscale
     }
 
