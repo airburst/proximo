@@ -8,7 +8,7 @@
 
   <!-- Bottom Bar -->
   <md-toolbar [color]="primary">
-    <button md-icon-button aria-label="Centre on me" (click)="centreMe()">
+    <button md-icon-button aria-label="Centre on me" (click)="centreMe(settings.myLocation.position)">
       <md-icon class="md-24">my_location</md-icon>
     </button>
     <button md-icon-button aria-label="Scale map to fit" (click)="scaleToFit()">

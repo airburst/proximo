@@ -21,6 +21,7 @@ md-list {
     flex-direction: row;
     width: 100%;
     align-items: center;
+    cursor: pointer;
 }
 
 .fill-space {
@@ -63,6 +64,7 @@ md-list {
     color: white;
     height: 100%;
     width: 48px;
+    cursor: pointer;
 }
 
 .remove.show {

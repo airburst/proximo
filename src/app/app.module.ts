@@ -8,6 +8,7 @@ import { InviteComponent } from './invite/invite.component';
 import { JoinComponent } from './join/join.component';
 import { NewuserComponent } from './newuser/newuser.component';
 import { NogeoComponent } from './nogeo/nogeo.component';
+//import { MDL } from './mdl';
 import { routing } from './routes.component';
 import { MdButtonModule } from '@angular2-material/button';
 import { MdCardModule } from '@angular2-material/card';
@@ -18,18 +19,7 @@ import { MdListModule } from '@angular2-material/list';
 import { MdToolbarModule } from '@angular2-material/toolbar';
 import { FIREBASE_PROVIDERS, defaultFirebase } from 'angularfire2';
 import { provideStore } from '@ngrx/store';
-// import { 
-//     createStore,
-//     Store,
-//     compose,
-//     StoreEnhancer 
-// } from 'redux';
 import { settingsReducer } from './reducers/settings';
-
-// let store: Store<AppState> = createStore<AppState>(
-//   reducer,
-//   compose(devtools)
-// );
 
 @NgModule({
     declarations: [
@@ -39,7 +29,8 @@ import { settingsReducer } from './reducers/settings';
         InviteComponent,
         JoinComponent,
         NewuserComponent,
-        NogeoComponent
+        NogeoComponent,
+        //MDL
     ],
     imports: [
         BrowserModule,  
@@ -56,7 +47,6 @@ import { settingsReducer } from './reducers/settings';
     ],
     providers: [
         provideStore({ settings: settingsReducer }),
-        //provide(AppStore, { useFactory: () => store }),
         FIREBASE_PROVIDERS,
         defaultFirebase({
             apiKey: "AIzaSyDGe_FmSZBr74_Eo9rbe-Ld9r264Ay47hE",
