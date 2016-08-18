@@ -46,7 +46,9 @@ export class JoinComponent implements OnInit {
 
   setJoinIdFromUrl() {
     this.route.params.subscribe(params => {
-      if (params['id']) { this.store.dispatch({ type: SET_JOIN_ID, payload: params['id'] }); }
+      if (params['id']) { 
+        this.store.dispatch({ type: SET_JOIN_ID, payload: params['id'] }); 
+      }
     });   // The router will throw an error if there was no :id path
   }
 
@@ -61,10 +63,6 @@ export class JoinComponent implements OnInit {
       .catch(error => console.log(error));
   }
 
-  private isMyLocationId(location: ILocation): boolean {
-    return (location.$key === this.settings.locationId) ? true : false;
-  }
-
   linkMeToThem(theirId: string) {
     let c: string[] = [theirId];
     if (this.settings.myLocation.contacts) { c = uniqueArray(c.concat(this.settings.myLocation.contacts)); }
@@ -75,10 +73,6 @@ export class JoinComponent implements OnInit {
     let c: string[] = [this.settings.locationId];
     if (theirLocation.contacts) { c = uniqueArray(c.concat(theirLocation.contacts)); }
     this.locationsService.updateByKey(theirLocation.$key, { contacts: c, updated: timeStamp });
-  }
-
-  public filterByKey(locations: ILocation[], key: string): ILocation {
-    return locations.filter((l) => { return l.$key === key; })[0];
   }
 
   goToMap() {

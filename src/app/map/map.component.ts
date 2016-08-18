@@ -126,7 +126,7 @@ export class MapComponent implements OnInit {
     }
 
     private centreMe($event) {
-        this.map.panTo(this.settings.myLocation.position);
+        this.map.panTo($event);
     }
 
     private scaleToFit() {

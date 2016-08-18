@@ -3,7 +3,7 @@
   <div class="contacts-list">
     <div *ngIf="show" class="contacts-list-container">
       <md-list-item *ngFor="let contact of settings.contacts">
-        <div class="contact-row" (click)="centre.emit(contact.$key); clicked(contact)">
+        <div class="contact-row" (click)="centre.emit(contact.position); clicked(contact)">
           <span class="name">{{contact.name}}</span>
           <span class="fill-space"></span>
           <span class="time"><i>{{formatDate(contact.updated)}}</i></span>
@@ -21,7 +21,7 @@
   <div *ngIf="show" class="me">
     <md-divider></md-divider>
     <md-list-item>
-      <div class="contact-row" (click)="centre.emit(settings.myLocation.$key)">
+      <div class="contact-row" (click)="centre.emit(settings.myLocation.position)">
         <span class="name">Me</span>
         <span class="fill-space"></span>
         <span class="time"><i>{{formatDate(settings.myLocation.updated)}}</i></span>
