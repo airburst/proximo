@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ILocation } from '../location';
 import { Store } from '@ngrx/store';
-import { SET_JOIN_ID, ISettings } from '../reducers/settings';
+import { SET_JOIN_ID, UNSET_JOIN_ID, ISettings } from '../reducers/settings';
 import { AppState } from '../app.component';
 import { timeStamp, uniqueArray } from '../utils';
 import { LocationsService } from '../locations.service';
@@ -55,6 +55,7 @@ export class JoinComponent implements OnInit {
       .then((match) => {
         this.linkMeToThem(theirId);
         this.linkThemToMe(match);
+        //this.store.dispatch({ type: UNSET_JOIN_ID });
         this.goToMap();
       })
       .catch(error => console.log(error));

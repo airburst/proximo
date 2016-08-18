@@ -4,6 +4,7 @@ import {ILocation} from '../location';
 export const INITIALISED = 'INITIALISED';
 export const SET_LOCATION_ID = 'SET_LOCATION_ID';
 export const SET_JOIN_ID = 'SET_JOIN_ID';
+export const UNSET_JOIN_ID = 'UNSET_JOIN_ID';
 export const SET_MY_LOCATION = 'SET_MY_LOCATION';
 export const SET_CONTACTS = 'SET_CONTACTS';
 export const TOGGLE_CONTACTS_PANEL = 'TOGGLE_CONTACTS_PANEL';
@@ -44,6 +45,9 @@ export const settingsReducer: ActionReducer<ISettings> = (state: ISettings = ini
 
         case SET_JOIN_ID:
             return Object.assign({}, state, { joinId: action.payload });
+
+        case UNSET_JOIN_ID:
+            return Object.assign({}, state, { joinId: null });
 
         case SET_MY_LOCATION:
             return Object.assign({}, state, { myLocation: action.payload });

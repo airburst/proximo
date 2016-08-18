@@ -3,6 +3,7 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
+import { ContactsComponent } from './contacts/contacts.component';
 import { InviteComponent } from './invite/invite.component';
 import { JoinComponent } from './join/join.component';
 import { NewuserComponent } from './newuser/newuser.component';
@@ -34,6 +35,7 @@ import { settingsReducer } from './reducers/settings';
     declarations: [
         AppComponent, 
         MapComponent,
+        ContactsComponent,
         InviteComponent,
         JoinComponent,
         NewuserComponent,

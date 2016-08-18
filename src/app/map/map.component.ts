@@ -2,11 +2,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import {ILocation, Location, LatLng} from '../location';
-import {GeolocationService} from '../geolocation.service';
-import {LocationsService} from '../locations.service';
-import {ContactsComponent} from '../contacts/contacts.component';
-import {timeStamp, uniqueArray, removeItemFromArray} from '../utils';
+import { ILocation, Location, LatLng } from '../location';
+import { GeolocationService } from '../geolocation.service';
+import { LocationsService } from '../locations.service';
+import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
 import { Store } from '@ngrx/store';
 import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, TOGGLE_CONTACTS_PANEL, ISettings } from '../reducers/settings';
 import { AppState } from '../app.component';
@@ -16,7 +15,6 @@ import { AppState } from '../app.component';
     selector: 'app-map',
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
-    directives: [ContactsComponent],
     providers: [LocationsService, GeolocationService]
 })
 export class MapComponent implements OnInit {
@@ -24,7 +22,7 @@ export class MapComponent implements OnInit {
     app: Observable<any>;
     settings: ISettings;
     map: any;
-    newUser: boolean = false;
+    newUser: boolean = false;                               //
     options: any = { zoom: 12 };
     icon: any = {
         path: window.google.maps.SymbolPath.CIRCLE,
@@ -140,13 +138,20 @@ export class MapComponent implements OnInit {
         this.router.navigate(['../invite/', this.settings.locationId], { relativeTo: this.route });
     }
 
-    // Unlink contact (both ways)
     private unlinkContact(contact: ILocation) {
+        this.unlinkMeFromContact(contact);
+        this.unlinkContactFromMe(contact);
+    }
+
+    private unlinkMeFromContact(contact: ILocation) {
         removeItemFromArray(contact.contacts, this.settings.locationId);
+        console.log('unlinking me from contact', contact.contacts)                      //
         this.locationsService.updateByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
-            // removeItemFromArray(me.contacts, contact.$key);
-            // this.autoScale = true;
-            // this.locationsService.updateByKey(me.$key, { contacts: me.contacts, updated: timeStamp });
+    }
+
+    private unlinkContactFromMe(contact: ILocation) {
+        removeItemFromArray(this.settings.myLocation.contacts, contact.$key);
+        this.locationsService.updateByKey(this.settings.locationId, { contacts: this.settings.myLocation.contacts, updated: timeStamp });
     }
 
     toggleContacts($event) {

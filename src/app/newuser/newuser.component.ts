@@ -21,7 +21,7 @@ interface Option {
 export class NewuserComponent implements OnInit {
 
   joinId: string = null;
-  joinForm: FormGroup;
+  newUserForm: FormGroup;
   firstname: AbstractControl;
   colour: AbstractControl;
   colourList: Option[];
@@ -31,12 +31,12 @@ export class NewuserComponent implements OnInit {
     private route: ActivatedRoute,
     fb: FormBuilder
   ) {
-    this.joinForm = fb.group({
+    this.newUserForm = fb.group({
       firstname: ['', Validators.required],
       colour: ['blue']
     });
-    this.firstname = this.joinForm.controls['firstname'];
-    this.colour = this.joinForm.controls['colour'];
+    this.firstname = this.newUserForm.controls['firstname'];
+    this.colour = this.newUserForm.controls['colour'];
   }
 
   ngOnInit() {

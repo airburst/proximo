@@ -11,7 +11,7 @@
         Please enter your first name and choose a colour for your map pin.
       </p>
 
-      <form [formGroup]="joinForm" class="form">
+      <form [formGroup]="newUserForm" class="form">
 
         <div class="form-group" [class.has-error]="!firstname.valid && firstname.touched" [class.has-success]="firstname.valid && firstname.touched">
           <label for="nameInput">Name *</label>
@@ -26,7 +26,7 @@
           </select>
         </div>
 
-        <button md-raised-button type="submit" color="primary" aria-label="Join" [disabled]="!joinForm.valid" (click)="join(joinForm.value)">
+        <button md-raised-button type="submit" color="primary" aria-label="Join" [disabled]="!newUserForm.valid" (click)="join(newUserForm.value)">
           GO TO MAP
         </button>
 
@@ -44,10 +44,23 @@
         <p class="info">Enjoy using ProxiMate!</p>
       </div>
 
-      <button md-raised-button type="submit" color="primary" aria-label="Join" [disabled]="!joinForm.valid" (click)="join(joinForm.value)">
+      <button md-raised-button type="submit" color="primary" aria-label="Join" [disabled]="!newUserForm.valid" (click)="join(newUserForm.value)">
         GO TO MAP
       </button>
     </div>
 
   </div>
 </div>
+
+<!-- New user dialog
+<div *ngIf="newUser" class="modal-cover"></div>
+<div class="confirm-dialog" [ngClass]="{show: newUser}">
+  <md-card>
+    <h2>Hi There</h2>
+    <p class="intro">You seem like you're new to ProxiMate.  Please give us a few details.</p>
+
+    <button md-raised-button color="primary" aria-label="Change my details" (click)="updateContact()">
+      YES
+    </button>
+  </md-card>
+</div> End New user dialog -->
