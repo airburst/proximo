@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ILocation } from '../location';
 import { Store } from '@ngrx/store';
-import { SET_JOIN_ID, UNSET_JOIN_ID, ISettings } from '../reducers/settings';
+import { ISettings } from '../reducers/settings';
 import { AppState } from '../app.component';
 import { timeStamp, uniqueArray } from '../utils';
 import { LocationsService } from '../locations.service';
@@ -19,6 +19,7 @@ export class JoinComponent implements OnInit {
 
   app: Observable<any>;
   settings: ISettings;
+  joinId: string;
 
   constructor(
     private router: Router,
@@ -33,23 +34,18 @@ export class JoinComponent implements OnInit {
     this.app.subscribe((settings) => {
       if (settings.initialised) {
         this.settings = settings;
-        if (settings.joinId === null) {
-          this.setJoinIdFromUrl();
-        } else {
-          if (settings.joinId !== settings.locationId) {
-            this.linkUsers(settings.joinId);
-          }
-        }
+        this.setJoinIdFromUrl();
       }
     });
   }
 
   setJoinIdFromUrl() {
     this.route.params.subscribe(params => {
-      if (params['id']) { 
-        this.store.dispatch({ type: SET_JOIN_ID, payload: params['id'] }); 
+      if (params['id']) {
+        this.joinId = params['id'];
+        if (this.joinId !== this.settings.locationId) { this.linkUsers(this.joinId); }
       }
-    });   // The router will throw an error if there was no :id path
+    });
   }
 
   linkUsers(theirId: string) {                          //TODO move into locationsService
@@ -57,7 +53,7 @@ export class JoinComponent implements OnInit {
       .then((match) => {
         this.linkMeToThem(theirId);
         this.linkThemToMe(match);
-        //this.store.dispatch({ type: UNSET_JOIN_ID });
+        this.joinId = null;
         this.goToMap();
       })
       .catch(error => console.log(error));
@@ -76,7 +72,7 @@ export class JoinComponent implements OnInit {
   }
 
   goToMap() {
-    this.router.navigate(['/'], { relativeTo: this.route });
+    this.router.navigate(['/map'], { relativeTo: this.route });
   }
 
 }

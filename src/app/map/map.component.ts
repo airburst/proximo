@@ -7,7 +7,7 @@ import { GeolocationService } from '../geolocation.service';
 import { LocationsService } from '../locations.service';
 import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
 import { Store } from '@ngrx/store';
-import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, TOGGLE_CONTACTS_PANEL, ISettings } from '../reducers/settings';
+import { ISettings } from '../reducers/settings';
 import { AppState } from '../app.component';
 
 @Component({
@@ -51,7 +51,9 @@ export class MapComponent implements OnInit {
     ngOnInit() {
         this.resetBounds();
         this.show();
-        this.app.subscribe((s) => { this.updateMap(s); });
+        this.app.subscribe((s) => { 
+            if (s.initialised) { this.updateMap(s); }
+        });
         //this.geoService.watch(this.updateMyLocation.bind(this));
     }
 
@@ -145,12 +147,13 @@ export class MapComponent implements OnInit {
 
     private unlinkMeFromContact(contact: ILocation) {
         removeItemFromArray(contact.contacts, this.settings.locationId);
-        console.log('unlinking me from contact', contact.contacts)                      //
+        console.log('unlinking me from contact', contact)                      //
         this.locationsService.updateByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
     }
 
     private unlinkContactFromMe(contact: ILocation) {
         removeItemFromArray(this.settings.myLocation.contacts, contact.$key);
+        console.log('unlinking contact from me', this.settings.myLocation)                      //
         this.locationsService.updateByKey(this.settings.locationId, { contacts: this.settings.myLocation.contacts, updated: timeStamp });
     }
 

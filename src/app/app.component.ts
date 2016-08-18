@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { SET_JOIN_ID, SET_LOCATION_ID, SET_MY_LOCATION, SET_CONTACTS, UPDATE_SETTINGS, ISettings } from './reducers/settings';
+import { SET_LOCATION_ID, SET_MY_LOCATION, SET_CONTACTS, UPDATE_SETTINGS, ISettings } from './reducers/settings';
 import { GeolocationService } from './geolocation.service';
 import { LocationsService } from './locations.service';
 import { ILocation, Location, LatLng } from './location';
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
   }
 
   subscribeToFirebase() {
-    this.locations$.subscribe((l) => { this.filterLocations(l); });
+    this.locations$.subscribe((l) => { console.log('FROM FIREBASE',l); this.filterLocations(l); });
   }
 
   // Filter for locations that include me as a contact and were updated in last 24 hours
