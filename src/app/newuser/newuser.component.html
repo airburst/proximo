@@ -19,7 +19,7 @@
           </select>
       </div>
 
-      <button md-raised-button type="submit" color="primary" aria-label="Change my details" [disabled]="!newUserForm.valid" (click)="updateContact(newUserForm.value)">
+      <button md-raised-button type="submit" color="primary" aria-label="Change my details" [disabled]="!newUserForm.valid" (click)="updateContact.emit(newUserForm.value)">
         GO TO MAP
       </button>
 

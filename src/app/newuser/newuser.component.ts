@@ -1,5 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, Output } from '@angular/core';
-//import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import {
   Validators,
   FormBuilder,
@@ -20,18 +19,14 @@ interface Option {
 })
 export class NewuserComponent implements OnInit {
 
-  //joinId: string = null;
   @Input() newUser: boolean;
+  @Output() updateContact = new EventEmitter();
   newUserForm: FormGroup;
   firstname: AbstractControl;
   colour: AbstractControl;
   colourList: Option[];
 
-  constructor(
-    // private router: Router,
-    // private route: ActivatedRoute,
-    fb: FormBuilder
-  ) {
+  constructor(fb: FormBuilder) {
     this.newUserForm = fb.group({
       firstname: ['', Validators.required],
       colour: ['blue']
@@ -42,9 +37,6 @@ export class NewuserComponent implements OnInit {
 
   ngOnInit() {
     this.setColourList()
-    // this.route.params.subscribe(params => {
-    //   if (params['id']) { this.joinId = params['id']; }
-    // });
   }
 
   ngAfterViewInit() {

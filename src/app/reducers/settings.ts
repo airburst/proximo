@@ -11,16 +11,16 @@ export const RESET = 'RESET';
 
 export interface ISettings {
     locationId: string;
+    newUser: boolean;
     myLocation: ILocation;
     contacts: ILocation[];
     myPins: ILocation[];
     initialised: boolean;
-    // centre map
-    // scale to fit
 }
 
 const initialSettings = {
     locationId: null,
+    newUser: false,
     myLocation: null,
     contacts: [],
     myPins: [],

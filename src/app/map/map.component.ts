@@ -7,7 +7,7 @@ import { GeolocationService } from '../geolocation.service';
 import { LocationsService } from '../locations.service';
 import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
 import { Store } from '@ngrx/store';
-import { ISettings } from '../reducers/settings';
+import { UPDATE_SETTINGS, ISettings } from '../reducers/settings';
 import { AppState } from '../app.component';
 
 @Component({
@@ -22,7 +22,6 @@ export class MapComponent implements OnInit {
     app: Observable<any>;
     settings: ISettings;
     map: any;
-    newUser: boolean = true;                               //
     options: any = { zoom: 12 };
     icon: any = {
         path: window.google.maps.SymbolPath.CIRCLE,
@@ -52,7 +51,10 @@ export class MapComponent implements OnInit {
         this.resetBounds();
         this.show();
         this.app.subscribe((s) => { 
-            if (s.initialised) { this.updateMap(s); }
+            if (s.initialised) {
+                this.settings = <ISettings>s;
+                this.updateMap(s); 
+            }
         });
         //this.geoService.watch(this.updateMyLocation.bind(this));
     }
@@ -71,13 +73,10 @@ export class MapComponent implements OnInit {
     }
 
     updateMap(settings: ISettings) {
-        this.settings = <ISettings>settings;
-        console.log('settings', settings)                                           //
         this.displayMarkers(settings.myPins);
     }
 
     private displayMarkers(markers: ILocation[]) {
-        console.log('display markers', markers)                                      //
         this.removeAllMarkers();
         markers.forEach((m) => { 
             if (m !== undefined) { this.addMarker(m); }
@@ -147,18 +146,21 @@ export class MapComponent implements OnInit {
 
     private unlinkMeFromContact(contact: ILocation) {
         removeItemFromArray(contact.contacts, this.settings.locationId);
-        console.log('unlinking me from contact', contact)                      //
         this.locationsService.updateByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
     }
 
     private unlinkContactFromMe(contact: ILocation) {
         removeItemFromArray(this.settings.myLocation.contacts, contact.$key);
-        console.log('unlinking contact from me', this.settings.myLocation)                      //
         this.locationsService.updateByKey(this.settings.locationId, { contacts: this.settings.myLocation.contacts, updated: timeStamp });
     }
 
     toggleContacts($event) {
         this.showContacts = !this.showContacts;
+    }
+
+    updateNewUser(details: any) {
+        this.locationsService.updateByKey(this.settings.locationId, { name: details.firstname, color: details.colour });
+        this.store.dispatch({ type: UPDATE_SETTINGS, payload: { newUser: false } });
     }
 
 }

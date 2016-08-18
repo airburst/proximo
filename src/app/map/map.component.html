@@ -27,4 +27,6 @@
 
 </div>
 
-<app-newuser [newUser]="newUser"></app-newuser>
+<app-newuser 
+  [newUser]="settings && settings.newUser"
+  (updateContact)="updateNewUser($event)"></app-newuser>

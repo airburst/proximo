@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch({ type: SET_LOCATION_ID, payload: this.locationId });
+    this.store.dispatch({ type: UPDATE_SETTINGS, payload: { locationId: this.locationId, newUser: this.newUser } });
     // Get stream of locations from Firebase and filter for my contacts
     this.subscribeToFirebase();
     this.getGeoPosition(this.locationId);
@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
         this.setLocation({ lat: position.latitude, lng: position.longitude }, locationId);
       })
       .catch((error: any) => {
-        console.log('Geo error', error)                                             //
+        console.log('Geo error', error)        //
         //this.router.navigate(['./nogeo'], { relativeTo: this.route });
       });
   }
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
   }
 
   subscribeToFirebase() {
-    this.locations$.subscribe((l) => { console.log('FROM FIREBASE',l); this.filterLocations(l); });
+    this.locations$.subscribe((l) => { this.filterLocations(l); });
   }
 
   // Filter for locations that include me as a contact and were updated in last 24 hours
