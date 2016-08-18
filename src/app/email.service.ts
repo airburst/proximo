@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { Http, Headers } from '@angular/http';
 import { EmailTemplates } from './email-templates';
 
