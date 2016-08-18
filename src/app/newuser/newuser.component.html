@@ -1,66 +1,41 @@
-<div class="page">
-
-  <md-toolbar color="primary">
-    <h2>Welcome to ProxiMate</h2>
-  </md-toolbar>
-
-  <div class="main container">
-    <div class="form-container">
-
-      <p class="intro">
-        Please enter your first name and choose a colour for your map pin.
-      </p>
-
-      <form [formGroup]="newUserForm" class="form">
-
-        <div class="form-group" [class.has-error]="!firstname.valid && firstname.touched" [class.has-success]="firstname.valid && firstname.touched">
-          <label for="nameInput">Name *</label>
-          <input class="form-control input-lg" type="text" id="nameInput" [formControl]="firstname">
-          <div *ngIf="firstname.hasError('required') && firstname.touched" class="error message">Please enter your name</div>
-        </div>
-
-        <div class="form-group">
-          <label for="colourInput">Colour</label>
-          <select class="form-control input-lg" id="colourInput" [formControl]="colour">
-            <option *ngFor="let colour of colourList" value="{{colour.value}}">{{colour.text}}</option>
-          </select>
-        </div>
-
-        <button md-raised-button type="submit" color="primary" aria-label="Join" [disabled]="!newUserForm.valid" (click)="join(newUserForm.value)">
-          GO TO MAP
-        </button>
-
-      </form>
-    </div>
-
-    <div class="info-container">
-      <h2 class="info-heading">Privacy Information</h2>
-      <div class="info-box">
-        <p class="info">Your location is only shared with people whose invitations you accept, or who you invite (and they accept).</p>
-        <p class="info">Your location is only updated if you visit this site (https://proximate.fairhursts.net).</p>
-        <p class="info">This app only stores your name and your last location; it does not track where you have been.</p>
-        <p class="info">Your location is only visible to your contacts if you visited the site within the last 24 hours.</p>
-        <p class="info">You can stop sharing your location with contacts at any time.</p>
-        <p class="info">Enjoy using ProxiMate!</p>
-      </div>
-
-      <button md-raised-button type="submit" color="primary" aria-label="Join" [disabled]="!newUserForm.valid" (click)="join(newUserForm.value)">
-        GO TO MAP
-      </button>
-    </div>
-
-  </div>
-</div>
-
-<!-- New user dialog
 <div *ngIf="newUser" class="modal-cover"></div>
 <div class="confirm-dialog" [ngClass]="{show: newUser}">
   <md-card>
     <h2>Hi There</h2>
-    <p class="intro">You seem like you're new to ProxiMate.  Please give us a few details.</p>
+    <p class="intro">You seem like you're new to ProxiMate. Please give us a few details.</p>
 
-    <button md-raised-button color="primary" aria-label="Change my details" (click)="updateContact()">
-      YES
-    </button>
+    <form [formGroup]="newUserForm" class="form">
+
+      <div class="form-group" [class.has-error]="!firstname.valid && firstname.touched" [class.has-success]="firstname.valid && firstname.touched">
+        <label for="nameInput">Name *</label>
+        <input class="form-control input-lg" type="text" id="nameInput" [formControl]="firstname">
+        <div *ngIf="firstname.hasError('required') && firstname.touched" class="error message">Please enter your name</div>
+      </div>
+
+      <div class="form-group">
+        <label for="colourInput">Your Marker Colour</label>
+        <select class="form-control input-lg" id="colourInput" [formControl]="colour">
+            <option *ngFor="let colour of colourList" value="{{colour.value}}">{{colour.text}}</option>
+          </select>
+      </div>
+
+      <button md-raised-button type="submit" color="primary" aria-label="Change my details" [disabled]="!newUserForm.valid" (click)="updateContact(newUserForm.value)">
+        GO TO MAP
+      </button>
+
+    </form>
   </md-card>
-</div> End New user dialog -->
+</div>
+
+
+<!--<div class="info-container">
+  <h2 class="info-heading">Privacy Information</h2>
+  <div class="info-box">
+    <p class="info">Your location is only shared with people whose invitations you accept, or who you invite (and they accept).</p>
+    <p class="info">Your location is only updated if you visit this site (https://proximate.fairhursts.net).</p>
+    <p class="info">This app only stores your name and your last location; it does not track where you have been.</p>
+    <p class="info">Your location is only visible to your contacts if you visited the site within the last 24 hours.</p>
+    <p class="info">You can stop sharing your location with contacts at any time.</p>
+    <p class="info">Enjoy using ProxiMate!</p>
+  </div>
+</div>-->

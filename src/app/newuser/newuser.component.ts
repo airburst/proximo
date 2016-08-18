@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, AfterViewInit, Input, Output } from '@angular/core';
+//import { Router, ActivatedRoute } from '@angular/router';
 import {
   Validators,
   FormBuilder,
@@ -20,15 +20,16 @@ interface Option {
 })
 export class NewuserComponent implements OnInit {
 
-  joinId: string = null;
+  //joinId: string = null;
+  @Input() newUser: boolean;
   newUserForm: FormGroup;
   firstname: AbstractControl;
   colour: AbstractControl;
   colourList: Option[];
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
+    // private router: Router,
+    // private route: ActivatedRoute,
     fb: FormBuilder
   ) {
     this.newUserForm = fb.group({
@@ -41,9 +42,9 @@ export class NewuserComponent implements OnInit {
 
   ngOnInit() {
     this.setColourList()
-    this.route.params.subscribe(params => {
-      if (params['id']) { this.joinId = params['id']; }
-    });
+    // this.route.params.subscribe(params => {
+    //   if (params['id']) { this.joinId = params['id']; }
+    // });
   }
 
   ngAfterViewInit() {
@@ -61,12 +62,12 @@ export class NewuserComponent implements OnInit {
     ];
   }
 
-  join(form: any): void {
-    this.router.navigate([this.makeUrl(), form], { relativeTo: this.route });
-  }
+  // join(form: any): void {
+  //   this.router.navigate([this.makeUrl(), form], { relativeTo: this.route });
+  // }
 
-  makeUrl(): string {
-    return '/join/' + this.joinId + '/';
-  }
+  // makeUrl(): string {
+  //   return '/join/' + this.joinId + '/';
+  // }
 
 }

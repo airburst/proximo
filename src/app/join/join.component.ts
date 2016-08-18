@@ -72,7 +72,7 @@ export class JoinComponent implements OnInit {
   }
 
   goToMap() {
-    this.router.navigate(['/map'], { relativeTo: this.route });
+    this.router.navigate(['/'], { relativeTo: this.route });
   }
 
 }

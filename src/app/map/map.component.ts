@@ -22,7 +22,7 @@ export class MapComponent implements OnInit {
     app: Observable<any>;
     settings: ISettings;
     map: any;
-    newUser: boolean = false;                               //
+    newUser: boolean = true;                               //
     options: any = { zoom: 12 };
     icon: any = {
         path: window.google.maps.SymbolPath.CIRCLE,
