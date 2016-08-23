@@ -5,19 +5,17 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "mapRoot": "/",
-    "module": "commonjs",
+    "module": "es6",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": false,
-    "outDir": "../dist/",
+    "outDir": "../dist/out-tsc",
     "rootDir": ".",
     "sourceMap": true,
     "target": "es5",
-    "inlineSources": true
-  },
-
-  "files": [
-    "main.ts",
-    "typings.d.ts"
-  ]
+    "lib": ["es5", "dom"],
+    "typeRoots": ["../node_modules/@types"],
+    "types": ["hammerjs"]
+  }
 }
+

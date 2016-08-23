@@ -4,16 +4,10 @@
 <head>
   <meta charset="utf-8">
   <title>ProxiMate</title>
-  <base href="/"> {{#unless environment.production}}
-  <script src="/ember-cli-live-reload.js" type="text/javascript"></script> {{/unless}}
+  <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-  <!-- material design lite -->
-  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css">
-  <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>-->
-
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="/app/css/main.css" rel="stylesheet">
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGe_FmSZBr74_Eo9rbe-Ld9r264Ay47hE&libraries=geometry"></script>
@@ -21,15 +15,6 @@
 
 <body>
   <app-root>Loading...</app-root>
-
-  {{#each scripts.polyfills}}
-  <script src="{{.}}"></script> {{/each}}
-  <script>
-      System.import('system-config.js').then(function () {
-        System.import('main');
-      }).catch(console.error.bind(console));
-    </script>
-
 </body>
 
 </html>

@@ -27,17 +27,6 @@ export class LocationsService {
     return this.locations$.update(location.$key, changes);
   }
 
-  // addContact(locationId: string, contact: any): Promise<any> {
-  //   let contacts$ = this.af.database.list('/locations/' + locationId + '/contacts');
-  //   return contacts$.push({ contact: contact });
-  // }
-
-  // removeContact(location: ILocation, contactId: string) {
-  //   let contacts$ = this.af.database.list('/locations/' + location.$key + '/contacts');
-  //   for (let c of Object.keys(location.contacts)) {
-  //     if (location.contacts[c].contact === contactId) { return contacts$.remove(c); }
-  //   };
-  // }
 
   getLocationByKey(key: string): Promise<any> {
     let loc: ILocation[] = [];
@@ -52,5 +41,17 @@ export class LocationsService {
   updateByKey(key: string, changes: any): Promise<any> {
     return this.locations$.update(key, changes);
   }
+
+  // addContact(locationId: string, contact: any): Promise<any> {
+  //   let contacts$ = this.af.database.list('/locations/' + locationId + '/contacts');
+  //   return contacts$.push({ contact: contact });
+  // }
+
+  // removeContact(location: ILocation, contactId: string) {
+  //   let contacts$ = this.af.database.list('/locations/' + location.$key + '/contacts');
+  //   for (let c of Object.keys(location.contacts)) {
+  //     if (location.contacts[c].contact === contactId) { return contacts$.remove(c); }
+  //   };
+  // }
 
 }

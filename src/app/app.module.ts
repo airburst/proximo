@@ -8,7 +8,6 @@ import { InviteComponent } from './invite/invite.component';
 import { JoinComponent } from './join/join.component';
 import { NewuserComponent } from './newuser/newuser.component';
 import { NogeoComponent } from './nogeo/nogeo.component';
-//import { MDL } from './mdl';
 import { routing } from './routes.component';
 import { MdButtonModule } from '@angular2-material/button';
 import { MdCardModule } from '@angular2-material/card';
@@ -29,8 +28,7 @@ import { settingsReducer } from './reducers/settings';
         InviteComponent,
         JoinComponent,
         NewuserComponent,
-        NogeoComponent,
-        //MDL
+        NogeoComponent
     ],
     imports: [
         BrowserModule,  

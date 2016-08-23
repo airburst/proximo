@@ -12,7 +12,6 @@ interface Option {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'app-newuser',
   templateUrl: 'newuser.component.html',
   styleUrls: ['newuser.component.css']

@@ -11,8 +11,7 @@ const routes: Routes = [
   { path: '', component: MapComponent },
   { path: 'join/:id', component: JoinComponent },
   { path: 'invite/:id', component: InviteComponent },
-  { path: 'nogeo', component: NogeoComponent },
-  //{ path: 'newuser', component: NewuserComponent }
+  { path: 'nogeo', component: NogeoComponent }
 ];
 
 export const routing = RouterModule.forRoot(routes);

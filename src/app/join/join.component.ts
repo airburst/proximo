@@ -9,7 +9,6 @@ import { timeStamp, uniqueArray } from '../utils';
 import { LocationsService } from '../locations.service';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-join',
   templateUrl: 'join.component.html',
   styleUrls: ['join.component.css'],

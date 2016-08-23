@@ -1,14 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Location, ILocation, LatLng } from '../location';
 import * as moment from 'moment';
-import { ISettings } from '../reducers/settings';
+//import { ISettings } from '../reducers/settings';
 
 interface Contact extends ILocation {
   clicked: boolean;
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'app-contacts',
   templateUrl: 'contacts.component.html',
   styleUrls: ['contacts.component.css']
@@ -23,7 +22,7 @@ export class ContactsComponent implements OnInit {
   showConfirmDialog: boolean = false;
   selectedContact: ILocation;
 
-  @Input() settings: ISettings;
+  @Input() settings: any;
   //@Input() me: ILocation;
   @Input() show: boolean;
   @Output() centre = new EventEmitter();

@@ -11,7 +11,6 @@ import { UPDATE_SETTINGS, ISettings } from '../reducers/settings';
 import { AppState } from '../app.component';
 
 @Component({
-    moduleId: module.id,
     selector: 'app-map',
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],

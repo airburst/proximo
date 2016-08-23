@@ -10,7 +10,6 @@ import {EmailService} from '../email.service';
 import {validateEmail} from '../validators';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-invite',
   templateUrl: 'invite.component.html',
   styleUrls: ['invite.component.css'],
