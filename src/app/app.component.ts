@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { SET_LOCATION_ID, SET_MY_LOCATION, SET_CONTACTS, UPDATE_SETTINGS, ISettings } from './reducers/settings';
 import { GeolocationService } from './geolocation.service';
 import { LocationsService } from './locations.service';
 import { ILocation, Location, LatLng } from './location';
 import { timeStamp, uid } from './utils';
-import * as moment from 'moment';
-
-export interface AppState {
-  settings: ISettings;
-}
+const moment = require('moment');
+import { select } from 'ng2-redux';
+import { ISettings } from './store';
+import { SettingsActions } from './actions';
 
 @Component({
   selector: 'app-root',
@@ -27,21 +24,22 @@ export class AppComponent implements OnInit {
   app: Observable<any>;
   newUser: boolean;
 
+  @select() settings$: Observable<ISettings>;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private geolocationService: GeolocationService,
     private locationsService: LocationsService,
-    public store: Store<AppState>
+    private settingsActions: SettingsActions
   ) {
     this.locationId = window.localStorage.getItem(this.locationKey);
     this.newUser = (this.locationId === null) ? true : false;
     this.locations$ = locationsService.locations$;
-    this.app = store.select('settings');
   }
 
   ngOnInit() {
-    this.store.dispatch({ type: UPDATE_SETTINGS, payload: { locationId: this.locationId, newUser: this.newUser } });
+    this.settingsActions.update({ locationId: this.locationId, newUser: this.newUser });
     // Get stream of locations from Firebase and filter for my contacts
     this.subscribeToFirebase();
     this.getGeoPosition(this.locationId);
@@ -49,7 +47,7 @@ export class AppComponent implements OnInit {
 
   getGeoPosition(locationId: string) {
     this.geolocationService.getLocation()
-      .then((position: any) => { 
+      .then((position: any) => {
         this.setLocation({ lat: position.latitude, lng: position.longitude }, locationId);
       })
       .catch((error: any) => {
@@ -74,7 +72,7 @@ export class AppComponent implements OnInit {
 
   addLocation(location: ILocation) {
     this.locationsService.add(location)
-      .then((v) => { 
+      .then((v) => {
         this.storeLocationId(v.key);
         this.locationsService.updateByKey(v.key, { updated: timeStamp });  // Forces refresh after locationId is stored
       });
@@ -93,13 +91,11 @@ export class AppComponent implements OnInit {
     let myLocation = this.filterByKey(locations, this.locationId);
     let contacts = this.filterMyContacts(locations);
     let combined = [].concat(...contacts).concat(myLocation);
-    this.store.dispatch({
-      type: UPDATE_SETTINGS, payload: {
-        contacts: contacts,
-        myLocation: myLocation,
-        myPins: combined,
-        initialised: true
-      }
+    this.settingsActions.update({
+      contacts: contacts,
+      myLocation: myLocation,
+      myPins: combined,
+      initialised: true
     });
   }
 
@@ -132,7 +128,7 @@ export class AppComponent implements OnInit {
   storeLocationId(id) {
     this.locationId = id;
     window.localStorage.setItem(this.locationKey, id);
-    this.store.dispatch({ type: SET_LOCATION_ID, payload: id });
+    this.settingsActions.setLocationId(id);
   }
 
 }

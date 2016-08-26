@@ -1,13 +1,12 @@
-import {ActionReducer, Action} from '@ngrx/store';
 import {ILocation} from '../location';
-
-export const INITIALISED = 'INITIALISED';
-export const SET_LOCATION_ID = 'SET_LOCATION_ID';
-export const SET_MY_LOCATION = 'SET_MY_LOCATION';
-export const SET_CONTACTS = 'SET_CONTACTS';
-export const TOGGLE_CONTACTS_PANEL = 'TOGGLE_CONTACTS_PANEL';
-export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
-export const RESET = 'RESET';
+import { 
+    INITIALISED,
+    SET_LOCATION_ID, 
+    SET_MY_LOCATION, 
+    SET_CONTACTS, 
+    UPDATE_SETTINGS,
+    RESET 
+} from '../constants';
 
 export interface ISettings {
     locationId: string;
@@ -27,8 +26,7 @@ const initialSettings = {
     initialised: false
 }
 
-export const settingsReducer: ActionReducer<ISettings> = (state: ISettings = initialSettings, action: Action) => {
-
+export function settingsReducer(state: ISettings = initialSettings, action: any) {
     switch (action.type) {
 
         case INITIALISED:

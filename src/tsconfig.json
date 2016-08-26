@@ -13,9 +13,24 @@
     "rootDir": ".",
     "sourceMap": true,
     "target": "es5",
-    "lib": ["es5", "dom"],
-    "typeRoots": ["../node_modules/@types"],
-    "types": ["hammerjs"]
-  }
+    "lib": [
+      "es5",
+      "dom"
+    ],
+    "typeRoots": [
+      "../node_modules/@types"
+    ],
+    "types": [
+      "hammerjs"
+    ]
+  },
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "useCache": false,
+    "emitRequireType": false
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
-

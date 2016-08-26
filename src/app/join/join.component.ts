@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ILocation } from '../location';
-import { Store } from '@ngrx/store';
-import { ISettings } from '../reducers/settings';
-import { AppState } from '../app.component';
 import { timeStamp, uniqueArray } from '../utils';
+import { select } from 'ng2-redux';
 import { LocationsService } from '../locations.service';
+import { ISettings } from '../store';
 
 @Component({
   selector: 'app-join',
@@ -16,21 +15,20 @@ import { LocationsService } from '../locations.service';
 })
 export class JoinComponent implements OnInit {
 
+  @select() settings$: Observable<ISettings>;
+
   app: Observable<any>;
-  settings: ISettings;
+  settings: any;            // Todo: strong type
   joinId: string;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private locationsService: LocationsService,
-    private store: Store<AppState>
-  ) {
-    this.app = store.select('settings');
-  }
+    private locationsService: LocationsService
+  ) { }
 
   ngOnInit() {
-    this.app.subscribe((settings) => {
+    this.settings$.subscribe((settings) => {
       if (settings.initialised) {
         this.settings = settings;
         this.setJoinIdFromUrl();

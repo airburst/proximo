@@ -17,12 +17,14 @@ import { MdInputModule } from '@angular2-material/input';
 import { MdListModule } from '@angular2-material/list';
 import { MdToolbarModule } from '@angular2-material/toolbar';
 import { FIREBASE_PROVIDERS, defaultFirebase } from 'angularfire2';
-import { provideStore } from '@ngrx/store';
-import { settingsReducer } from './reducers/settings';
+import { NgRedux, DevToolsExtension } from 'ng2-redux';
+import { IAppState, ISettings, enhancers, rootReducer } from './store';
+import { SettingsActions } from './actions';
+const createLogger = require('redux-logger');
 
 @NgModule({
     declarations: [
-        AppComponent, 
+        AppComponent,
         MapComponent,
         ContactsComponent,
         InviteComponent,
@@ -31,20 +33,22 @@ import { settingsReducer } from './reducers/settings';
         NogeoComponent
     ],
     imports: [
-        BrowserModule,  
+        BrowserModule,
         ReactiveFormsModule,
         routing,
-        MdCoreModule, 
-        MdButtonModule, 
-        MdToolbarModule, 
-        MdCardModule, 
+        MdCoreModule,
+        MdButtonModule,
+        MdToolbarModule,
+        MdCardModule,
         MdInputModule,
         MdListModule,
         MdToolbarModule,
         MdIconModule
     ],
     providers: [
-        provideStore({ settings: settingsReducer }),
+        NgRedux,
+        DevToolsExtension,
+        SettingsActions,
         FIREBASE_PROVIDERS,
         defaultFirebase({
             apiKey: "AIzaSyDGe_FmSZBr74_Eo9rbe-Ld9r264Ay47hE",
@@ -55,4 +59,15 @@ import { settingsReducer } from './reducers/settings';
     ],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+    constructor(
+        private ngRedux: NgRedux<IAppState>,
+        private devTool: DevToolsExtension
+    ) {
+        this.ngRedux.configureStore(
+            rootReducer,
+            {},
+            [createLogger()],
+            [...enhancers, devTool.isEnabled() ? devTool.enhancer() : f => f]);
+    }
+}

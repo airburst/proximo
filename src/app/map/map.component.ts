@@ -6,9 +6,9 @@ import { ILocation, Location, LatLng } from '../location';
 import { GeolocationService } from '../geolocation.service';
 import { LocationsService } from '../locations.service';
 import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
-import { Store } from '@ngrx/store';
-import { UPDATE_SETTINGS, ISettings } from '../reducers/settings';
-import { AppState } from '../app.component';
+import { select } from 'ng2-redux';
+import { ISettings } from '../store';
+import { SettingsActions } from '../actions';
 
 @Component({
     selector: 'app-map',
@@ -18,9 +18,9 @@ import { AppState } from '../app.component';
 })
 export class MapComponent implements OnInit {
 
-    app: Observable<any>;
-    settings: ISettings;
+    @select() settings$: Observable<ISettings>;
     map: any;
+    settings: ISettings;
     options: any = { zoom: 12 };
     icon: any = {
         path: window.google.maps.SymbolPath.CIRCLE,
@@ -40,18 +40,17 @@ export class MapComponent implements OnInit {
         private route: ActivatedRoute,
         private locationsService: LocationsService,
         private geoService: GeolocationService,
-        private store: Store<AppState>
+        private settingsActions: SettingsActions
     ) {
         this.markers = new Map;
-        this.app = store.select('settings');
     }
 
     ngOnInit() {
         this.resetBounds();
         this.show();
-        this.app.subscribe((s) => { 
+        this.settings$.subscribe((s) => { 
             if (s.initialised) {
-                this.settings = <ISettings>s;
+                this.settings = s;
                 this.updateMap(s); 
             }
         });
@@ -71,7 +70,7 @@ export class MapComponent implements OnInit {
         }
     }
 
-    updateMap(settings: ISettings) {
+    updateMap(settings: any) {                      // Strong type?
         this.displayMarkers(settings.myPins);
     }
 
@@ -159,7 +158,7 @@ export class MapComponent implements OnInit {
 
     updateNewUser(details: any) {
         this.locationsService.updateByKey(this.settings.locationId, { name: details.firstname, color: details.colour });
-        this.store.dispatch({ type: UPDATE_SETTINGS, payload: { newUser: false } });
+        this.settingsActions.update({ newUser: false });
     }
 
 }
