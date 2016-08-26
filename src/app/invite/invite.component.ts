@@ -55,7 +55,7 @@ export class InviteComponent implements OnInit, AfterViewInit {
   }
 
   back($event) {
-    this.router.navigate(['/'], { relativeTo: this.route });
+    this.router.navigate(['/map'], { relativeTo: this.route });
   }
 
 }

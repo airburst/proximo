@@ -1,0 +1,30 @@
+{
+    "settings": {
+        "locationId": "-KQ6INgGLuO56EU8zzH9",
+        "newUser": false,
+        "contacts": [],
+        "myPins": [
+            {
+                "color": "blue",
+                "name": "Me",
+                "position": {
+                    "lat": 51.6011344,
+                    "lng": -1.8036607999999998
+                },
+                "updated": "2016-08-26T14:42:58.192Z",
+                "$key": "-KQ6INgGLuO56EU8zzH9"
+            }
+        ],
+        "initialised": true,
+        "myLocation": {
+            "color": "blue",
+            "name": "Me",
+            "position": {
+                "lat": 51.6011344,
+                "lng": -1.8036607999999998
+            },
+            "updated": "2016-08-26T14:42:58.192Z",
+            "$key": "-KQ6INgGLuO56EU8zzH9"
+        }
+    }
+}

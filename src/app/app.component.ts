@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { GeolocationService } from './geolocation.service';
-import { LocationsService } from './locations.service';
 import { ILocation, Location, LatLng } from './location';
-import { timeStamp, uid } from './utils';
-const moment = require('moment');
+import { timeStamp } from './utils';
 import { select } from 'ng2-redux';
 import { ISettings } from './store';
 import { SettingsActions } from './actions';
@@ -14,14 +12,12 @@ import { SettingsActions } from './actions';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  providers: [GeolocationService, LocationsService]
+  providers: [GeolocationService]
 })
 export class AppComponent implements OnInit {
 
   locationKey: string = 'proximateLocationId';
   locationId: string;
-  locations$: Observable<ILocation[]>;
-  app: Observable<any>;
   newUser: boolean;
 
   @select() settings$: Observable<ISettings>;
@@ -30,17 +26,14 @@ export class AppComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private geolocationService: GeolocationService,
-    private locationsService: LocationsService,
     private settingsActions: SettingsActions
   ) {
     this.locationId = window.localStorage.getItem(this.locationKey);
     this.newUser = (this.locationId === null) ? true : false;
-    this.locations$ = locationsService.locations$;
   }
 
   ngOnInit() {
     this.settingsActions.update({ locationId: this.locationId, newUser: this.newUser });
-    // Get stream of locations from Firebase and filter for my contacts
     this.subscribeToFirebase();
     this.getGeoPosition(this.locationId);
   }
@@ -48,7 +41,7 @@ export class AppComponent implements OnInit {
   getGeoPosition(locationId: string) {
     this.geolocationService.getLocation()
       .then((position: any) => {
-        this.setLocation({ lat: position.latitude, lng: position.longitude }, locationId);
+        this.setLocation({ lat: position.latitude, lng: position.longitude }, locationId);    //TODO: Action Dispatch
       })
       .catch((error: any) => {
         console.log('Geo error', error)        //
@@ -71,58 +64,19 @@ export class AppComponent implements OnInit {
   }
 
   addLocation(location: ILocation) {
-    this.locationsService.add(location)
-      .then((v) => {
-        this.storeLocationId(v.key);
-        this.locationsService.updateByKey(v.key, { updated: timeStamp });  // Forces refresh after locationId is stored
+    this.settingsActions.addLocation(location)
+      .then((l) => { 
+        this.storeLocationId(l.key); 
+        this.settingsActions.updateLocationByKey(l.key, { updated: timeStamp });  // Forces refresh after locationId is stored
       });
   }
 
   updateLocation(location: ILocation) {
-    this.locationsService.update(location, { position: location.position, updated: timeStamp });
+    this.settingsActions.updateLocation(location, { position: location.position, updated: timeStamp });
   }
 
   subscribeToFirebase() {
-    this.locations$.subscribe((l) => { this.filterLocations(l); });
-  }
-
-  // Filter for locations that include me as a contact and were updated in last 24 hours
-  filterLocations(locations: ILocation[]): void {
-    let myLocation = this.filterByKey(locations, this.locationId);
-    let contacts = this.filterMyContacts(locations);
-    let combined = [].concat(...contacts).concat(myLocation);
-    this.settingsActions.update({
-      contacts: contacts,
-      myLocation: myLocation,
-      myPins: combined,
-      initialised: true
-    });
-  }
-
-  public filterByKey(locations: ILocation[], key: string): ILocation {
-    return locations.filter((l) => { return l.$key === key; })[0];
-  }
-
-  filterMyContacts(locations: ILocation[]): ILocation[] {
-    return locations.filter((l) => {
-      return this.isLinkedToMyLocationId(l) && this.hasUpdatedInLastDay(l);
-    });
-  }
-
-  private containsMyLocationId(location: ILocation): boolean {
-    return (this.isMyLocationId(location) || this.isLinkedToMyLocationId(location)) ? true : false;
-  }
-
-  private isMyLocationId(location: ILocation): boolean {
-    return (location.$key === this.locationId) ? true : false;
-  }
-
-  private isLinkedToMyLocationId(location: ILocation): boolean {
-    return location.contacts && (location.contacts.indexOf(this.locationId) > -1) ? true : false;
-  }
-
-  private hasUpdatedInLastDay(location: ILocation): boolean {
-    return (moment().diff(moment(location.updated), 'days') === 0);
+    this.settingsActions.getLocations(this.locationId);
   }
 
   storeLocationId(id) {

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ILocation, Location, LatLng } from '../location';
 import { GeolocationService } from '../geolocation.service';
-import { LocationsService } from '../locations.service';
 import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
 import { select } from 'ng2-redux';
 import { ISettings } from '../store';
@@ -14,7 +13,7 @@ import { SettingsActions } from '../actions';
     selector: 'app-map',
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
-    providers: [LocationsService, GeolocationService]
+    providers: [GeolocationService]
 })
 export class MapComponent implements OnInit {
 
@@ -34,11 +33,11 @@ export class MapComponent implements OnInit {
     bounds: any;
     showContacts: boolean = false;
     autoScale: boolean = true;
+    joinId: string;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private locationsService: LocationsService,
         private geoService: GeolocationService,
         private settingsActions: SettingsActions
     ) {
@@ -48,13 +47,26 @@ export class MapComponent implements OnInit {
     ngOnInit() {
         this.resetBounds();
         this.show();
-        this.settings$.subscribe((s) => { 
+        this.settings$.subscribe((s) => {
             if (s.initialised) {
                 this.settings = s;
-                this.updateMap(s); 
+                this.setJoinIdFromUrl();
+                this.updateMap(s);
             }
         });
         //this.geoService.watch(this.updateMyLocation.bind(this));
+    }
+
+    setJoinIdFromUrl() {
+        this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.joinId = params['id'];
+                if (this.joinId !== this.settings.locationId) { 
+                    this.settingsActions.linkUsers(this.joinId);
+                    this.router.navigate(['/map'], { relativeTo: this.route });
+                }
+            }
+        });
     }
 
     private resetBounds() {
@@ -76,7 +88,7 @@ export class MapComponent implements OnInit {
 
     private displayMarkers(markers: ILocation[]) {
         this.removeAllMarkers();
-        markers.forEach((m) => { 
+        markers.forEach((m) => {
             if (m !== undefined) { this.addMarker(m); }
         });
         if (this.autoScale) { this.scaleToFit(); /*this.autoScale = false;*/ }      //TODO: sort our autoscale
@@ -144,12 +156,12 @@ export class MapComponent implements OnInit {
 
     private unlinkMeFromContact(contact: ILocation) {
         removeItemFromArray(contact.contacts, this.settings.locationId);
-        this.locationsService.updateByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
+        this.settingsActions.updateLocationByKey(contact.$key, { contacts: contact.contacts, updated: timeStamp });
     }
 
     private unlinkContactFromMe(contact: ILocation) {
         removeItemFromArray(this.settings.myLocation.contacts, contact.$key);
-        this.locationsService.updateByKey(this.settings.locationId, { contacts: this.settings.myLocation.contacts, updated: timeStamp });
+        this.settingsActions.updateLocationByKey(this.settings.locationId, { contacts: this.settings.myLocation.contacts, updated: timeStamp });
     }
 
     toggleContacts($event) {
@@ -157,10 +169,8 @@ export class MapComponent implements OnInit {
     }
 
     updateNewUser(details: any) {
-        this.locationsService.updateByKey(this.settings.locationId, { name: details.firstname, color: details.colour });
+        this.settingsActions.updateLocationByKey(this.settings.locationId, { name: details.firstname, color: details.colour });
         this.settingsActions.update({ newUser: false });
     }
 
 }
-
-//firebase.database().ref('locations').child('-KMcS5szYoEpMtkvrekI').child('location').update({lng: -2.7016700, lat: 51.1417600});

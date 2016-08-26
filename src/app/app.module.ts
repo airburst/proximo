@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { ContactsComponent } from './contacts/contacts.component';
 import { InviteComponent } from './invite/invite.component';
-import { JoinComponent } from './join/join.component';
 import { NewuserComponent } from './newuser/newuser.component';
 import { NogeoComponent } from './nogeo/nogeo.component';
 import { routing } from './routes.component';
@@ -28,7 +27,6 @@ const createLogger = require('redux-logger');
         MapComponent,
         ContactsComponent,
         InviteComponent,
-        JoinComponent,
         NewuserComponent,
         NogeoComponent
     ],
