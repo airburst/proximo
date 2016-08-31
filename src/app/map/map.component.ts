@@ -1,4 +1,3 @@
-///<reference path="../../../typings/window.extend.d.ts"/>
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -8,6 +7,8 @@ import { timeStamp, uniqueArray, removeItemFromArray } from '../utils';
 import { select } from 'ng2-redux';
 import { ISettings } from '../store';
 import { SettingsActions } from '../actions';
+
+declare let google: any;
 
 @Component({
     selector: 'app-map',
@@ -22,7 +23,7 @@ export class MapComponent implements OnInit {
     settings: ISettings;
     options: any = { zoom: 12 };
     icon: any = {
-        path: window.google.maps.SymbolPath.CIRCLE,
+        path: google.maps.SymbolPath.CIRCLE,
         fillColor: 'white',
         fillOpacity: 0.8,
         scale: 15,
@@ -70,12 +71,12 @@ export class MapComponent implements OnInit {
     }
 
     private resetBounds() {
-        this.bounds = new window.google.maps.LatLngBounds();
+        this.bounds = new google.maps.LatLngBounds();
     }
 
     public show() {
-        if (window.google) {
-            this.map = new window.google.maps.Map(document.getElementById('map'), {
+        if (google) {
+            this.map = new google.maps.Map(document.getElementById('map'), {
                 zoom: this.options.zoom,
                 center: this.options.centre
             });
@@ -101,7 +102,7 @@ export class MapComponent implements OnInit {
 
     private makeGoogleMarker(marker: ILocation): any {
         let symbol = Object.assign({}, this.icon, { strokeColor: marker.color });
-        return new window.google.maps.Marker({
+        return new google.maps.Marker({
             position: marker.position,
             map: this.map,
             icon: symbol,
@@ -122,8 +123,8 @@ export class MapComponent implements OnInit {
         this.bounds.extend(marker.getPosition());
         // Don't zoom too close if only one marker
         if (this.bounds.getNorthEast().equals(this.bounds.getSouthWest())) {
-            var extendPoint1 = new window.google.maps.LatLng(this.bounds.getNorthEast().lat() + 0.005, this.bounds.getNorthEast().lng() + 0.005);
-            var extendPoint2 = new window.google.maps.LatLng(this.bounds.getNorthEast().lat() - 0.005, this.bounds.getNorthEast().lng() - 0.005);
+            var extendPoint1 = new google.maps.LatLng(this.bounds.getNorthEast().lat() + 0.005, this.bounds.getNorthEast().lng() + 0.005);
+            var extendPoint2 = new google.maps.LatLng(this.bounds.getNorthEast().lat() - 0.005, this.bounds.getNorthEast().lng() - 0.005);
             this.bounds.extend(extendPoint1);
             this.bounds.extend(extendPoint2);
         }
