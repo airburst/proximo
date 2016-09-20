@@ -1,10 +1,10 @@
-import { Proximo2Page } from './app.po';
+import { ProximateUpdatePage } from './app.po';
 
-describe('proximo2 App', function() {
-  let page: Proximo2Page;
+describe('proximate-update App', function() {
+  let page: ProximateUpdatePage;
 
   beforeEach(() => {
-    page = new Proximo2Page();
+    page = new ProximateUpdatePage();
   });
 
   it('should display message saying app works', () => {

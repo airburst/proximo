@@ -14,7 +14,7 @@ declare let google: any;
     selector: 'app-map',
     templateUrl: 'map.component.html',
     styleUrls: ['map.component.css'],
-    providers: [GeolocationService]
+    providers: [GeolocationService]                 //
 })
 export class MapComponent implements OnInit {
 
@@ -64,7 +64,7 @@ export class MapComponent implements OnInit {
                 this.joinId = params['id'];
                 if (this.joinId !== this.settings.locationId) { 
                     this.settingsActions.linkUsers(this.joinId);
-                    this.router.navigate(['/map'], { relativeTo: this.route });
+                    this.router.navigate(['/'], { relativeTo: this.route });
                 }
             }
         });

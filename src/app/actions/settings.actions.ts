@@ -15,7 +15,7 @@ import {
   RESET
 } from '../constants';
 import { ILocation } from '../location';
-const moment = require('moment');
+import * as moment from 'moment';
 import { timeStamp, uniqueArray } from '../utils';
 
 
@@ -50,15 +50,15 @@ export class SettingsActions {
     return this.locations$.subscribe((snapshot) => { this.filterLocations(snapshot, locationId); });
   };
 
-  addLocation = (location: ILocation): Promise<any> => {
+  addLocation = (location: ILocation): firebase.database.ThenableReference => {
     return this.locations$.push(location);
   };
 
-  removeLocation = (location: ILocation): Promise<any> => {
+  removeLocation = (location: ILocation): firebase.Promise<void> => {
     return this.locations$.remove(location.$key);
   };
 
-  updateLocation = (location: ILocation, changes: any): Promise<any> => {
+  updateLocation = (location: ILocation, changes: any): firebase.Promise<void> => {
     return this.locations$.update(location.$key, changes);
   };
 
@@ -72,7 +72,7 @@ export class SettingsActions {
     });
   };
 
-  updateLocationByKey = (key: string, changes: any): Promise<any> => {
+  updateLocationByKey = (key: string, changes: any): firebase.Promise<void> => {
     return this.locations$.update(key, changes);
   };
 

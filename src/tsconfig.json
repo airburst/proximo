@@ -1,36 +1,20 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "mapRoot": "/",
-    "module": "es6",
-    "moduleResolution": "node",
-    "noEmitOnError": true,
-    "noImplicitAny": false,
-    "outDir": "../dist/out-tsc",
-    "rootDir": ".",
-    "sourceMap": true,
-    "target": "es5",
     "lib": [
-      "es5",
+      "es6",
       "dom"
     ],
+    "mapRoot": "./",
+    "module": "es6",
+    "moduleResolution": "node",
+    "outDir": "../dist/out-tsc",
+    "sourceMap": true,
+    "target": "es5",
     "typeRoots": [
       "../node_modules/@types"
-    ],
-    "types": [
-      "hammerjs"
     ]
-  },
-  "awesomeTypescriptLoaderOptions": {
-    "useBabel": true,
-    "useCache": false,
-    "emitRequireType": false
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  }
 }

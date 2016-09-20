@@ -1,4 +1,6 @@
-export class Proximo2Page {
+import { browser, element, by } from 'protractor/globals';
+
+export class ProximateUpdatePage {
   navigateTo() {
     return browser.get('/');
   }

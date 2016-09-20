@@ -65,8 +65,8 @@ export class AppComponent implements OnInit {
 
   addLocation(location: ILocation) {
     this.settingsActions.addLocation(location)
-      .then((l) => { 
-        this.storeLocationId(l.key); 
+      .then((l) => {
+        this.storeLocationId(l.key);
         this.settingsActions.updateLocationByKey(l.key, { updated: timeStamp });  // Forces refresh after locationId is stored
       });
   }

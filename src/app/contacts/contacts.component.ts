@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Location, ILocation, LatLng } from '../location';
 import { ISettings } from '../store';
-const moment = require('moment');
+import * as moment from 'moment';
 
 interface Contact extends ILocation {
   clicked: boolean;
